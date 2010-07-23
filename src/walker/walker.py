@@ -18,19 +18,29 @@ class Walker(object):
         '''
         
     def walk(self, dir):
+        size = 0
+        numFiles = 0
+        numDirs = 0
         for root, dirs, files in os.walk(dir, onerror=self.walkError):
             try:
-                print root, "consumes",
-                print sum(getsize(join(root, name)) for name in files),
-                print "bytes in", len(files), "non-directory files"
-                if 'CVS' in dirs:
-                    dirs.remove('CVS')  # don't visit CVS directories
+                #print root, "consumes",
+                
+                # ignore filer snapshot dirs at the CL
+                if '.snapshot' in dirs:
+                    dirs.remove('.snapshot')
+                    
+                #print sum(getsize(join(root, name)) for name in files),
+                size += sum(getsize(join(root, name)) for name in files)
+                numFiles += len(files)
+                numDirs += 1
+                #print "bytes in", len(files), "non-directory files"
             except OSError as e:
                 self.walkError(e)
             else:
                 pass
+        print "walked ", numFiles, " files and ", numDirs, " directories, totalling ", size, " bytes"
 
     def walkError(self, err):
-        print "ERROR!"
+        print "ERROR! ", err.strerror, " on ", err.filename
         pass
         

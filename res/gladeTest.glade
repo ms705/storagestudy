@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<interface>
+  <requires lib="gtk+" version="2.16"/>
+  <!-- interface-naming-policy project-wide -->
+  <object class="GtkDialog" id="surveyDialog">
+    <property name="border_width">5</property>
+    <property name="title" translatable="yes">University of Cambridge -- Personal Storage Survey</property>
+    <property name="resizable">False</property>
+    <property name="window_position">center</property>
+    <property name="type_hint">normal</property>
+    <property name="has_separator">False</property>
+    <signal name="destroy" handler="on_surveyDialog_destroy"/>
+    <child internal-child="vbox">
+      <object class="GtkVBox" id="dialog-vbox1">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child>
+          <object class="GtkFixed" id="fixed1">
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkImage" id="image1">
+                <property name="width_request">335</property>
+                <property name="height_request">93</property>
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="pixbuf">uc-colour-small.png</property>
+              </object>
+              <packing>
+                <property name="x">16</property>
+                <property name="y">16</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="lblSurveySubtitle">
+                <property name="width_request">430</property>
+                <property name="height_request">25</property>
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">Computer Laboratory -- Personal Storage Survey</property>
+                <attributes>
+                  <attribute name="size" value="13000"/>
+                  <attribute name="scale" value="1.000000"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="x">16</property>
+                <property name="y">90</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkHSeparator" id="hseparator1">
+                <property name="width_request">390</property>
+                <property name="height_request">14</property>
+                <property name="visible">True</property>
+              </object>
+              <packing>
+                <property name="x">30</property>
+                <property name="y">114</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label1">
+                <property name="width_request">415</property>
+                <property name="height_request">252</property>
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">Thank your for participating in the Computer Laboratory Laboratory Personal Storage Survey.
+
+This survey will:
+* ask you a few simple questions about how you store your personal data,
+* scan your "My Documents" directory / home directory, gather some anonymised aggregate information and submit it,
+* finally permanently remove itself from your computer.
+
+It will NOT:
+* leak any file names, file content or personal information,
+* install persistent software on your computer.
+
+You will be able to review all the data submitted before it is sent. Please click "Next" to continue.</property>
+                <property name="wrap">True</property>
+              </object>
+              <packing>
+                <property name="x">16</property>
+                <property name="y">130</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkHSeparator" id="hseparator2">
+                <property name="width_request">390</property>
+                <property name="height_request">20</property>
+                <property name="visible">True</property>
+              </object>
+              <packing>
+                <property name="x">30</property>
+                <property name="y">375</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLinkButton" id="btnWebsiteLink">
+                <property name="label" translatable="yes">http://www.cl.cam.ac.uk/~ms705/research/storagesurvey/</property>
+                <property name="width_request">380</property>
+                <property name="height_request">30</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="has_tooltip">True</property>
+                <property name="relief">none</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="uri">http://www.cl.cam.ac.uk/~ms705/</property>
+              </object>
+              <packing>
+                <property name="x">16</property>
+                <property name="y">405</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label2">
+                <property name="width_request">400</property>
+                <property name="height_request">32</property>
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">For more information, visit:</property>
+              </object>
+              <packing>
+                <property name="x">22</property>
+                <property name="y">393</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child internal-child="action_area">
+          <object class="GtkHButtonBox" id="dialog-action_area1">
+            <property name="visible">True</property>
+            <property name="layout_style">end</property>
+            <child>
+              <object class="GtkButton" id="btnCancel">
+                <property name="label" translatable="yes">_Cancel</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_underline">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btnNext">
+                <property name="label" translatable="yes">_Next</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="can_default">True</property>
+                <property name="has_default">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_underline">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <action-widgets>
+      <action-widget response="0">btnCancel</action-widget>
+      <action-widget response="0">btnNext</action-widget>
+    </action-widgets>
+  </object>
+</interface>
