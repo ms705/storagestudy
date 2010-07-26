@@ -11,19 +11,14 @@ from common import utils
 from walker import walker
 
 #import gtk
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 
 from gui import surveyMainWindow
 
 
 if __name__ == '__main__':
     
-    # show GUI for preliminary stuff
-#    builder = gtk.Builder()
-#    builder.add_from_file("res/gladeTest.glade")
-#    builder.get_object("surveyDialog").show()
-#    builder.connect_signals({"on_surveyDialog_destroy": gtk.main_quit})
-#    gtk.main()
+    # set up Qt application
     app = QtGui.QApplication(sys.argv)
     m = surveyMainWindow.surveyMainWindow(app)
     m.show()

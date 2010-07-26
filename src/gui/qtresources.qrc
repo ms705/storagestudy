@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="res" >
+    <file>uc-colour-small.png</file>
+  </qresource>
+</RCC>
