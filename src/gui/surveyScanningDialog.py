@@ -23,15 +23,19 @@ class surveyScanningDialog(QtGui.QDialog):
         # signal/slot connections
         #self.connect(self.ui.btnCancel, QtCore.SIGNAL('clicked()'), QtGui.qApp, QtCore.SLOT('quit()'))
     
-        d = QtGui.QApplication.desktop()
-        print d.width(), " by ", d.height() 
+        #vpos = d.height() / 2 - (self.height() / 2);
+        #if (d.width() > 2*d.height()):
+        #    hpos = d.width() / 4 - (self.width() / 2);
+        #else:
+        #    hpos = d.width() / 2 - (self.width() / 2);
+        #self.move(hpos, vpos);
+        self.center()
 
-        vpos = d.height() / 2 - (self.height() / 2);
-        if (d.width() > 2*d.height()):
-            hpos = d.width() / 4 - (self.width() / 2);
-        else:
-            hpos = d.width() / 2 - (self.width() / 2);
-        self.move(hpos, vpos);
+    
+    def center(self):
+        screen = QtGui.QDesktopWidget().screenGeometry()
+        size =  self.geometry()
+        self.move((screen.width()-size.width())/2, (screen.height()-size.height())/2)
 
         # launch directory walker
         #homeDirPath = os.getenv("HOME","")

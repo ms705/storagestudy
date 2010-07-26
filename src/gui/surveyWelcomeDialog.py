@@ -13,8 +13,10 @@ class surveyWelcomeDialog(QtGui.QDialog):
     
     def next(self):
         print "next clicked"
+        self.close()
         d = surveyScanningDialog(self.app)
-        d.show()
+        d.setAttribute(QtCore.Qt.WA_DeleteOnClose)    
+        d.exec_()
 
     def __init__(self, owner):        
         QtGui.QMainWindow.__init__(self)
