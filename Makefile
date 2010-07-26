@@ -8,13 +8,16 @@ configure:
 
 # build everything
 all: 
-	./build.sh
+#	./build.sh
 
 # run server
 run:
-	cd src $(PYTHON) main.py
+	cd src; $(PYTHON) main.py
 
 # clean
 clean:
 	rm -f *.pyc
 
+# build application package(s)
+package:
+	./package.sh

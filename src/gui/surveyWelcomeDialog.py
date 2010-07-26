@@ -5,7 +5,7 @@ Created on 23 Jul 2010
 '''
 from gui.surveyScanningDialog import surveyScanningDialog
 
-import ui_main
+import ui_welcome
 from PyQt4 import QtGui, QtCore
 
 
@@ -20,7 +20,7 @@ class surveyWelcomeDialog(QtGui.QDialog):
 
     def __init__(self, owner):        
         QtGui.QMainWindow.__init__(self)
-        self.ui = ui_main.Ui_surveyDialog()
+        self.ui = ui_welcome.Ui_surveyDialog()
         self.ui.setupUi(self)
         self.app = owner;
 
