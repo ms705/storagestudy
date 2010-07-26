@@ -2,6 +2,10 @@
 
 PYTHON=/usr/bin/python
 
+# configure: compile resource files etc.
+configure:
+	./configure.sh
+
 # build everything
 all: 
 	./build.sh
