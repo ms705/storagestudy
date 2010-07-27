@@ -6,23 +6,38 @@ Created on 19 Jul 2010
 
 import os
 from os.path import join, getsize
+from common import utils
 
-class Walker(object):
+from PyQt4.QtCore import *
+
+class Walker(QThread):
     '''
     classdocs
     '''
 
-    def __init__(self):
+    def __init__(self, parent = None):
         '''
         Constructor
         '''
+        QThread.__init__(self, parent)
+        self.exiting = False
         
+    def scan(self, scanRoot):
+        self.dir = scanRoot
+        self.start()
+        
+    def run(self):
+        utils.debug_print("Starting scan thread...", utils.MSG)
+        self.walk(self.dir)
+    
     def walk(self, dir):
         size = 0
         numFiles = 0
         numDirs = 0
         for root, dirs, files in os.walk(dir, onerror=self.walkError):
             try:
+                if self.exiting:
+                    return
                 #print root, "consumes",
                 
                 # ignore filer snapshot dirs at the CL
@@ -39,8 +54,19 @@ class Walker(object):
             else:
                 pass
         print "walked ", numFiles, " files and ", numDirs, " directories, totalling ", size, " bytes"
+        #self.emit
 
     def walkError(self, err):
-        print "ERROR! ", err.strerror, " on ", err.filename
+        utils.debug_print(err.strerror + " on " + err.filename, utils.ERR)
         pass
+        
+    def exit(self):
+        utils.debug_print("Scan thread exiting...", utils.MSG)
+        self.exiting = True
+        
+    def __del__(self):
+        self.exiting = True
+        utils.debug_print("Scan thread waiting to terminate...", utils.MSG, False)
+        self.wait()
+        
         

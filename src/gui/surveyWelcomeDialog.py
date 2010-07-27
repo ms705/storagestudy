@@ -8,11 +8,12 @@ from gui.surveyScanningDialog import surveyScanningDialog
 import ui_welcome
 from PyQt4 import QtGui, QtCore
 
+from common import utils
 
 class surveyWelcomeDialog(QtGui.QDialog):
     
     def next(self):
-        print "next clicked"
+        utils.debug_print("Welcome screen confirmed", utils.SUCC)
         self.close()
         d = surveyScanningDialog(self.app)
         d.setAttribute(QtCore.Qt.WA_DeleteOnClose)    
@@ -28,8 +29,8 @@ class surveyWelcomeDialog(QtGui.QDialog):
         self.connect(self.ui.btnCancel, QtCore.SIGNAL('clicked()'), QtGui.qApp, QtCore.SLOT('quit()'))
         self.connect(self.ui.btnNext, QtCore.SIGNAL('clicked()'), self.next)
     
-        d = QtGui.QApplication.desktop()
-        print d.width(), " by ", d.height() 
+        #d = QtGui.QApplication.desktop()
+        #print d.width(), " by ", d.height() 
 
         self.center()
 
