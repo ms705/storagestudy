@@ -1,5 +1,6 @@
 #!/bin/bash
 
+PLATFORM=`uname`
 
 if [[ $PLATFORM == 'Darwin' ]]; then 
   PYUIC4='pyuic4-2.6'
