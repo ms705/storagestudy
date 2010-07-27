@@ -16,7 +16,7 @@ from walker import walker
 
 class surveyScanningDialog(QtGui.QDialog):
     
-    def __init__(self, owner):        
+    def __init__(self, owner, dirs):        
         QtGui.QMainWindow.__init__(self)
         self.ui = ui_scanning.Ui_scanDialog()
         self.ui.setupUi(self)
@@ -40,9 +40,14 @@ class surveyScanningDialog(QtGui.QDialog):
         #self.move(hpos, vpos);
         self.center()
         
-        homeDirPath = os.getenv("HOME","")
-        utils.debug_print("Your home directory is: " + homeDirPath)
-        self.scanThread.scan(homeDirPath)
+        #homeDirPath = os.getenv("HOME","")
+        #utils.debug_print("Your home directory is: " + homeDirPath)
+        
+        if dirs == []:
+            utils.debug_print("No directories selected!", utils.ERR)
+        
+        for d in dirs:
+            self.scanThread.scan(d)
 
 
     def cancel(self):
