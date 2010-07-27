@@ -16,6 +16,7 @@ fi
 
 # UI files
 $PYUIC4 src/gui/welcome.ui > src/gui/ui_welcome.py
+$PYUIC4 src/gui/folderselection.ui > src/gui/ui_folderselection.py
 $PYUIC4 src/gui/scanning.ui > src/gui/ui_scanning.py
 
 # resources

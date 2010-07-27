@@ -40,14 +40,16 @@ class Walker(QThread):
                     return
                 #print root, "consumes",
                 
+                numFiles += len(files)
+                numDirs += 1
+                self.emit(SIGNAL("scanned(int, int)"), numFiles, numDirs)
+
                 # ignore filer snapshot dirs at the CL
                 if '.snapshot' in dirs:
                     dirs.remove('.snapshot')
                     
                 #print sum(getsize(join(root, name)) for name in files),
                 size += sum(getsize(join(root, name)) for name in files)
-                numFiles += len(files)
-                numDirs += 1
                 #print "bytes in", len(files), "non-directory files"
             except OSError as e:
                 self.walkError(e)

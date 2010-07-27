@@ -3,7 +3,7 @@ Created on 23 Jul 2010
 
 @author: ms705
 '''
-from gui.surveyScanningDialog import surveyScanningDialog
+from gui.surveyFolderSelectionDialog import surveyFolderSelectionDialog
 
 import ui_welcome
 from PyQt4 import QtGui, QtCore
@@ -15,7 +15,7 @@ class surveyWelcomeDialog(QtGui.QDialog):
     def next(self):
         utils.debug_print("Welcome screen confirmed", utils.SUCC)
         self.close()
-        d = surveyScanningDialog(self.app)
+        d = surveyFolderSelectionDialog(self.app)
         d.setAttribute(QtCore.Qt.WA_DeleteOnClose)    
         d.exec_()
 

@@ -23,13 +23,15 @@ class surveyScanningDialog(QtGui.QDialog):
         
         # set up worker thread
         self.scanThread = walker.Walker()
+        self.callbacks = 0
 
         # signal/slot connections
         self.connect(self.scanThread, SIGNAL("finished()"), self.finishedScanning)
         self.connect(self.scanThread, SIGNAL("terminated()"), self.error)
         #self.connect(self.scanThread, SIGNAL(""))
         self.connect(self.ui.btnCancel, SIGNAL('clicked()'), self.cancel)
-    
+        self.connect(self.scanThread, SIGNAL("scanned(int, int)"), self.iterate)
+
         #vpos = d.height() / 2 - (self.height() / 2);
         #if (d.width() > 2*d.height()):
         #    hpos = d.width() / 4 - (self.width() / 2);
@@ -51,6 +53,16 @@ class surveyScanningDialog(QtGui.QDialog):
         else:
             pass
     
+    def iterate(self, files, dirs):
+        self.callbacks += 1
+        #utils.debug_print("iterated: added " + str(files) + " files and " + str(dirs) + " directories.", utils.MSG)
+        
+        #if self.callbacks > 100:
+        #    avgfiles = files / dirs
+        #    self.ui.progressBar.setMaximum(files + dirs)
+        #    self.ui.progressBar.setMinimum(0)
+        #    self.ui.progressBar.reset()
+        #    self.ui.progressBar.setValue(files)
     
     def finishedScanning(self):
         utils.debug_print("Finished scanning", utils.SUCC)
