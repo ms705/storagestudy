@@ -101,7 +101,7 @@ class surveyFolderSelectionDialog(QtGui.QDialog):
         
     def confirmClose(self):
         reply = QtGui.QMessageBox.question(self, 'Confirm cancellation',
-            "Are you sure you want to cancel? This will mean that all data entered" +  
+            "Are you sure you want to cancel? This will mean that all data entered " +  
             "is lost and no results are submitted to the researchers.", QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
         return (reply == QtGui.QMessageBox.Yes)
     

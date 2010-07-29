@@ -18,6 +18,7 @@ fi
 $PYUIC4 src/gui/welcome.ui > src/gui/ui_welcome.py
 $PYUIC4 src/gui/folderselection.ui > src/gui/ui_folderselection.py
 $PYUIC4 src/gui/scanning.ui > src/gui/ui_scanning.py
+$PYUIC4 src/gui/finished.ui > src/gui/ui_finished.py
 
 # resources
 $PYRCC4 res/qtresources.qrc > src/gui/qtresources_rc.py

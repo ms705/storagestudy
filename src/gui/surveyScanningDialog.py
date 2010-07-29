@@ -13,6 +13,7 @@ from PyQt4.QtCore import *
 from common import utils
 from walker import walker
 
+from gui.surveyFinishedDialog import surveyFinishedDialog
 
 class surveyScanningDialog(QtGui.QDialog):
     
@@ -20,6 +21,8 @@ class surveyScanningDialog(QtGui.QDialog):
         QtGui.QMainWindow.__init__(self)
         self.ui = ui_scanning.Ui_scanDialog()
         self.ui.setupUi(self)
+        self.app = owner
+        self.done = False
         
         # set up worker thread
         self.scanThread = walker.Walker()
@@ -72,8 +75,13 @@ class surveyScanningDialog(QtGui.QDialog):
     def finishedScanning(self):
         utils.debug_print("Finished scanning", utils.SUCC)
         
-        # TODO show results screen here
-        quit()
+        # show results screen
+        self.done = True
+        self.close()
+        d = surveyFinishedDialog(self.app, self.scanThread.results)
+        d.setAttribute(Qt.WA_DeleteOnClose)
+        d.exec_()
+
     
     
     def error(self):
@@ -81,15 +89,18 @@ class surveyScanningDialog(QtGui.QDialog):
     
     
     def closeEvent(self, event):
-        if self.confirmClose():
-            event.accept()
+        if not self.done: 
+            if self.confirmClose():
+                event.accept()
+            else:
+                event.ignore()
         else:
-            event.ignore()    
+            event.accept()
         
         
     def confirmClose(self):
         reply = QtGui.QMessageBox.question(self, 'Confirm cancellation',
-            "Are you sure you want to cancel? This will mean that all data entered" +  
+            "Are you sure you want to cancel? This will mean that all data entered " +  
             "is lost and no results are submitted to the researchers.", QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
         return (reply == QtGui.QMessageBox.Yes)
     

@@ -4,9 +4,9 @@ Created on 19 Jul 2010
 @author: ms705
 '''
 
-import os, mimetypes, json, gzip
-import tempfile
+import os, mimetypes
 from os.path import join, getsize
+
 from common import utils
 
 from PyQt4.QtCore import *
@@ -31,7 +31,7 @@ class Walker(QThread):
         
     def run(self):
         utils.debug_print("Starting scan thread...", utils.MSG)
-        self.walk(self.dir)
+        self.results = self.walk(self.dir)
     
     
     def walk(self, dir):
@@ -88,14 +88,6 @@ class Walker(QThread):
 
         # return the list of dicts (this will be MASSIVE)
         #print json.dumps(results, sort_keys=True, indent=4)
-        
-        # generate a temporary file
-        _, tmpfile = tempfile.mkstemp()
-        tf = gzip.open(tmpfile, 'wb')
-        tf.write(json.dumps(results, sort_keys=True, indent=4))
-        tf.close()
-        
-        utils.debug_print("Results saved to:" + tmpfile, utils.SUCC)
         
         return results
 
