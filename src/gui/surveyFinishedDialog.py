@@ -45,6 +45,11 @@ class surveyFinishedDialog(QtGui.QDialog):
         # actually submit the data
         self.submitter.submit(self.results)
         
+        # done
+        QtGui.QMessageBox.information(self, 'Data submitted',
+            "The data has been submitted. Thank you for participating!", QtGui.QMessageBox.Ok)
+        quit()
+        
         
     def cancel(self):
         if self.confirmClose():
