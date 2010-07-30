@@ -53,7 +53,6 @@ class ResultSubmitter(object):
 
 
         # Create the Request object
-        #http://www-dyn.cl.cam.ac.uk/~ms705/survey/index.php
-        request = urllib2.Request("http://cassiopeia.malteschwarzkopf.de/", datagen, headers)
+        request = urllib2.Request("http://www-dyn.cl.cam.ac.uk/~ms705/survey/index.php", datagen, headers)
         # Actually do the request, and get the response
         print urllib2.urlopen(request).read()

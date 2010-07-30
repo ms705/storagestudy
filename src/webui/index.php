@@ -13,8 +13,8 @@ foreach ($_FILES as $k => $p) {
 	echo "received item: " . $k;
 } 
 
-echo "\n"
+echo "\n";
 
-var_dump($_FILES)
+var_dump($_FILES);
 
 ?>
