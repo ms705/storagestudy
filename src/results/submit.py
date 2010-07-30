@@ -47,8 +47,7 @@ class ResultSubmitter(object):
         
         # headers contains the necessary Content-Type and Content-Length
         # datagen is a generator object that yields the encoded parameters
-        #datagen, headers = multipart_encode({"submission1": open(tmpfile, "rb")})
-        file_param = MultipartParam.from_file("image1", tmpfile)
+        file_param = MultipartParam.from_file("submission1", tmpfile)
         datagen, headers = multipart_encode([file_param])
 
 
