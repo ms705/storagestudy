@@ -6,6 +6,8 @@
  * Window - Preferences - PHPeclipse - PHP - Code Templates
  */
 
+echo "test";
+
 // Code to test POST submission of data
 foreach ($_POST as $k => $p) {
 	echo "received item: " . $k;
