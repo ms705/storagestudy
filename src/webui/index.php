@@ -10,12 +10,15 @@ echo "Received submission\n";
 
 // Code to test POST submission of data
 $uploaddir = './data/';
-$uploadfile = $uploaddir . basename($_FILES['submission'.$i]['name']).'.gz';
 
-if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
-    echo "File is valid, and was successfully uploaded.\n";
-} else {
-    echo "Possible file upload attack!\n";
+foreach ($_FILES as $k => $f) {
+	$uploadfile = $uploaddir . basename($f['name']).'.gz';
+	
+	if (move_uploaded_file($f['tmp_name'], $uploadfile)) {
+	    echo "File is valid, and was successfully uploaded.\n";
+	} else {
+	    echo "Possible file upload attack!\n";
+	}
 }
 
 ?>
