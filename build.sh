@@ -54,4 +54,12 @@ elif [[ $PLATFORM == "Linux" ]]; then
   make install
 fi
 
-
+#-----------
+# Install poster
+POSTERV='0.6.0'
+cd $LIBDIR
+#$WGET http://atlee.ca/software/poster/dist/0.6.0/poster-$POSTERV.tar.gz
+#tar -xvzf poster-$POSTERV.tar.gz
+#cd poster-0.6.0
+$WGET http://atlee.ca/software/poster/dist/0.6.0/poster-$POSTERV-py2.6.egg
+easy_install poster-$POSTERV-py2.6.egg

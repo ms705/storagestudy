@@ -13,4 +13,6 @@ foreach ($_POST as $k => $p) {
 	echo "received item: " . $k;
 } 
 
+var_dump($POST)
+
 ?>
