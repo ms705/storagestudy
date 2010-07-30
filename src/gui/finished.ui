@@ -121,7 +121,9 @@
     </rect>
    </property>
    <property name="text">
-    <string>Scanning completed successfully!</string>
+    <string>Scanning completed successfully! 
+
+Please click &quot;Submit&quot; to submit your data to the researchers.</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -191,6 +193,28 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>&amp;Cancel</string>
+   </property>
+  </widget>
+  <widget class="QProgressBar" name="progressBar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>290</y>
+     <width>431</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="value">
+    <number>24</number>
+   </property>
+   <property name="invertedAppearance">
+    <bool>false</bool>
+   </property>
+   <property name="format">
+    <string>Submitting: %p%</string>
    </property>
   </widget>
  </widget>

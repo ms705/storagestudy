@@ -20,12 +20,16 @@ class surveyFinishedDialog(QtGui.QDialog):
         QtGui.QMainWindow.__init__(self)
         self.ui = ui_finished.Ui_finishedDialog()
         self.ui.setupUi(self)
+        self.ui.progressBar.hide()
         
         self.done = False
+        self.submitter = submit.ResultSubmitter()
         
         # signal/slot connections
         self.connect(self.ui.btnCancel, SIGNAL('clicked()'), self.cancel)
         self.connect(self.ui.btnNext, SIGNAL('clicked()'), self.next)
+        #self.connect(self.submitter, SIGNAL('makingHTTPRequest(int)'), self, SLOT('updateProgress(int)'))
+        #self.connect(self.submitter, SIGNAL('finishedHTTPRequest()'), self.updateProgress(100))
     
         # store the results dict
         self.results = results
@@ -34,9 +38,12 @@ class surveyFinishedDialog(QtGui.QDialog):
     def next(self):
         self.done =  True
         
+        self.ui.progressBar.show()
+        self.ui.progressBar.setValue(0)
+        self.ui.progressBar.setMinimum(0)
+        self.ui.progressBar.setMaximum(100)
         # actually submit the data
-        s = submit.ResultSubmitter(self.results)
-        s.submit()
+        self.submitter.submit(self.results)
         
         
     def cancel(self):
@@ -63,6 +70,10 @@ class surveyFinishedDialog(QtGui.QDialog):
             "is lost and no results are submitted to the researchers.", QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
         return (reply == QtGui.QMessageBox.Yes)
     
+    
+    def updateProgress(self, percent):
+        self.ui.progressBar.setValue(percent)
+        
     
     def center(self):
         screen = QtGui.QDesktopWidget().screenGeometry()
