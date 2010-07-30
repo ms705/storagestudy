@@ -10,8 +10,8 @@ import tempfile
 from common import utils
 
 # poster stuff
-from poster.encode import multipart_encode
-from poster.streaminghttp import register_openers
+from poster.encode import *
+from poster.streaminghttp import *
 import urllib2
 
 class ResultSubmitter(object):
@@ -47,12 +47,13 @@ class ResultSubmitter(object):
         
         # headers contains the necessary Content-Type and Content-Length
         # datagen is a generator object that yields the encoded parameters
-        datagen, headers = multipart_encode({"submission1": open(tmpfile, "rb")})
+        #datagen, headers = multipart_encode({"submission1": open(tmpfile, "rb")})
+        file_param = MultipartParam.from_file("image1", tmpfile)
+        datagen, headers = multipart_encode([file_param])
 
-        print headers
-        print datagen
 
         # Create the Request object
-        request = urllib2.Request("http://www-dyn.cl.cam.ac.uk/~ms705/survey/index.php", datagen, headers)
+        #http://www-dyn.cl.cam.ac.uk/~ms705/survey/index.php
+        request = urllib2.Request("http://cassiopeia.malteschwarzkopf.de/", datagen, headers)
         # Actually do the request, and get the response
         print urllib2.urlopen(request).read()

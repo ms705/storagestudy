@@ -9,10 +9,12 @@
 echo "test";
 
 // Code to test POST submission of data
-foreach ($_POST as $k => $p) {
+foreach ($_FILES as $k => $p) {
 	echo "received item: " . $k;
 } 
 
-var_dump($_POST)
+echo "\n"
+
+var_dump($_FILES)
 
 ?>
