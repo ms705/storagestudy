@@ -4,7 +4,9 @@ Created on 23 Jul 2010
 @author: ms705
 '''
 
-import os, sys
+import json, gzip
+import tempfile
+
 import ui_finished
 
 from PyQt4 import QtGui
@@ -25,6 +27,17 @@ class surveyFinishedDialog(QtGui.QDialog):
         self.done = False
         self.submitter = submit.ResultSubmitter()
         
+
+        # generate a temporary file and store the results there
+        _, tmpfile = tempfile.mkstemp()
+        tf = gzip.open(tmpfile, 'wb')
+        tf.write(json.dumps(results, sort_keys=True, indent=4))
+        tf.close()
+        
+        utils.debug_print("Results saved to:" + tmpfile, utils.SUCC)
+        
+        self.ui.reviewPathLabel.setText('<b>' + tmpfile + '</b>')
+        
         # signal/slot connections
         self.connect(self.ui.btnCancel, SIGNAL('clicked()'), self.cancel)
         self.connect(self.ui.btnNext, SIGNAL('clicked()'), self.next)
@@ -44,6 +57,9 @@ class surveyFinishedDialog(QtGui.QDialog):
         self.ui.progressBar.setMaximum(100)
         # actually submit the data
         self.submitter.submit(self.results)
+        
+        #for i in range(1,5):
+        #    print self.results[i]
         
         # done
         QtGui.QMessageBox.information(self, 'Data submitted',

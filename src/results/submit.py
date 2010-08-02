@@ -4,18 +4,12 @@ Created on 29 Jul 2010
 @author: ms705
 '''
 
-import json, gzip
-import tempfile
-
 from PyQt4 import QtCore
-
-from os.path import getsize
-
-from common import utils
 
 # poster stuff
 from poster.encode import *
 from poster.streaminghttp import *
+from main import SUBMISSION_URL
 import urllib2
 
 class ResultSubmitter(QtCore.QObject):
@@ -32,15 +26,7 @@ class ResultSubmitter(QtCore.QObject):
     
     def submit(self, resultsDict):
         
-        # generate a temporary file
-        _, tmpfile = tempfile.mkstemp()
-        tf = gzip.open(tmpfile, 'wb')
-        tf.write(json.dumps(resultsDict, sort_keys=True, indent=4))
-        tf.close()
-        
-        utils.debug_print("Results saved to:" + tmpfile, utils.SUCC)
-        
-        # submit them over the network
+        # submit the results over the network
         
         # Register the streaming http handlers with urllib2
         register_openers()
@@ -56,7 +42,7 @@ class ResultSubmitter(QtCore.QObject):
 
 
         # Create the Request object
-        request = urllib2.Request("http://www-dyn.cl.cam.ac.uk/~ms705/survey/index.php", datagen, headers)
+        request = urllib2.Request(SUBMISSION_URL, datagen, headers)
         # Actually do the request, and get the response
         size = int(headers['Content-Length'])
         #self.emit(QtCore.SIGNAL("makingHTTPRequest(int)"), size)
