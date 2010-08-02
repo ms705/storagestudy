@@ -7,7 +7,4 @@ navtop=1,
 navtopinclude=1,
 breadcrumbs=1,
 breadcrumbprefix=((href="http://www.cl.cam.ac.uk", "Computer Laboratory"),(href="http://www.cl.cam.ac.uk/~ms705/", "Malte Schwarzkopf"),(href="http://www.cl.cam.ac.uk/~ms705/research/", "Research")),
-pub(navtitle="Publications"),
-supervisions(navtitle="Teaching"),
-projects(navtitle="Student projects"),
-research(navtitle="Research"),
+
