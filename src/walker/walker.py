@@ -22,10 +22,19 @@ class Walker(QThread):
         '''
         QThread.__init__(self, parent)
         self.exiting = False
-        
+
+        # set up main result data structure: a list of dicts
+        self.results = []
+        utils.debug_print("Resetting results dict")
+                
         
     def scan(self, scanRoot):
         self.dir = scanRoot
+
+        # output
+        utils.debug_print("Starting scan on " + scanRoot)
+        
+        # run
         self.start()
         
         
@@ -39,9 +48,6 @@ class Walker(QThread):
         numFiles = 0
         numDirs = 0
         id = 0
-        
-        # set up main result data structure: a list of dicts
-        results = []
         
         for root, dirs, files in os.walk(dir, onerror=self.walkError):
             try:
@@ -67,7 +73,7 @@ class Walker(QThread):
                     fp = join(root, f)
                     mime = mimetypes.guess_type(fp, False)
                     fileDict = {'elementID': id, 'size': getsize(fp), 'isDir': False, 'type': mime, 'path': fp}
-                    results.append(fileDict)
+                    self.results.append(fileDict)
                     id += 1
 
                 for d in dirs:
@@ -76,7 +82,7 @@ class Walker(QThread):
                     dp = join(root, d)
                     mime = mimetypes.guess_type(dp, False)
                     dirDict = {'elementID': id, 'size': getsize(join(root, d)), 'isDir': True, 'type': mime, 'path': dp}
-                    results.append(dirDict)
+                    self.results.append(dirDict)
                     id += 1
                 
             except OSError as e:
@@ -89,7 +95,7 @@ class Walker(QThread):
         # return the list of dicts (this will be MASSIVE)
         #print json.dumps(results, sort_keys=True, indent=4)
         
-        return results
+        return self.results
 
 
     def walkError(self, err):

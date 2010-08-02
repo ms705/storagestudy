@@ -1,2 +1,2 @@
 
-__all__ = ["dialogTest"]
+__all__ = ["surveyWelcomeDialog", "surveyFolderSelectionDialog", "surveyFinishedDialog", "surveyScanningDialog"]

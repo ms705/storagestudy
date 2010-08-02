@@ -9,13 +9,15 @@ from PyQt4 import QtCore
 # poster stuff
 from poster.encode import *
 from poster.streaminghttp import *
-from main import SUBMISSION_URL
 import urllib2
 
 class ResultSubmitter(QtCore.QObject):
     '''
     classdocs
     '''
+
+    # configure the URL to POST gzip'ed files to here
+    SUBMISSION_URL = "http://www-dyn.cl.cam.ac.uk/~ms705/survey/submissiontest.php"
 
 
     def __init__(self):
@@ -24,7 +26,7 @@ class ResultSubmitter(QtCore.QObject):
         '''
         #self.res = resultsDict
     
-    def submit(self, resultsDict):
+    def submit(self, tempfile):
         
         # submit the results over the network
         
@@ -37,12 +39,13 @@ class ResultSubmitter(QtCore.QObject):
         
         # headers contains the necessary Content-Type and Content-Length
         # datagen is a generator object that yields the encoded parameters
-        file_param = MultipartParam.from_file("submission1", tmpfile)
+        file_param = MultipartParam.from_file("submission1", tempfile)
         datagen, headers = multipart_encode([file_param])
 
 
         # Create the Request object
-        request = urllib2.Request(SUBMISSION_URL, datagen, headers)
+        global SUBMISSION_URL
+        request = urllib2.Request(self.SUBMISSION_URL, datagen, headers)
         # Actually do the request, and get the response
         size = int(headers['Content-Length'])
         #self.emit(QtCore.SIGNAL("makingHTTPRequest(int)"), size)

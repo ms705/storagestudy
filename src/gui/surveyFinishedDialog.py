@@ -29,10 +29,13 @@ class surveyFinishedDialog(QtGui.QDialog):
         
 
         # generate a temporary file and store the results there
-        _, tmpfile = tempfile.mkstemp()
+        _, tmpfile = tempfile.mkstemp(suffix='.gz')
         tf = gzip.open(tmpfile, 'wb')
         tf.write(json.dumps(results, sort_keys=True, indent=4))
         tf.close()
+
+        # store the tempfile path
+        self.tmpfile = tmpfile
         
         utils.debug_print("Results saved to:" + tmpfile, utils.SUCC)
         
@@ -43,9 +46,6 @@ class surveyFinishedDialog(QtGui.QDialog):
         self.connect(self.ui.btnNext, SIGNAL('clicked()'), self.next)
         #self.connect(self.submitter, SIGNAL('makingHTTPRequest(int)'), self, SLOT('updateProgress(int)'))
         #self.connect(self.submitter, SIGNAL('finishedHTTPRequest()'), self.updateProgress(100))
-    
-        # store the results dict
-        self.results = results
         
 
     def next(self):
@@ -56,7 +56,7 @@ class surveyFinishedDialog(QtGui.QDialog):
         self.ui.progressBar.setMinimum(0)
         self.ui.progressBar.setMaximum(100)
         # actually submit the data
-        self.submitter.submit(self.results)
+        self.submitter.submit(self.tmpfile)
         
         #for i in range(1,5):
         #    print self.results[i]
