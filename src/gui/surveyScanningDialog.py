@@ -49,8 +49,9 @@ class surveyScanningDialog(QtGui.QDialog):
         if dirs == []:
             utils.debug_print("No directories selected!", utils.ERR)
         
-        for d in dirs:
-            self.scanThread.scan(d)
+        #for d in dirs:
+        #    self.scanThread.scan(d)
+        self.scanThread.scan(dirs)
 
 
     def cancel(self):

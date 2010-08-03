@@ -28,11 +28,11 @@ class Walker(QThread):
         utils.debug_print("Resetting results dict")
                 
         
-    def scan(self, scanRoot):
-        self.dir = scanRoot
+    def scan(self, scanDirs):
+        self.dirs = scanDirs
 
         # output
-        utils.debug_print("Starting scan on " + scanRoot)
+        #utils.debug_print("Starting scan on " + scanRoot)
         
         # run
         self.start()
@@ -40,55 +40,56 @@ class Walker(QThread):
         
     def run(self):
         utils.debug_print("Starting scan thread...", utils.MSG)
-        self.results = self.walk(self.dir)
+        self.results = self.walk(self.dirs)
     
     
-    def walk(self, dir):
+    def walk(self, scanDirs):
         totalSize = 0
         numFiles = 0
         numDirs = 0
         id = 0
         
-        for root, dirs, files in os.walk(dir, onerror=self.walkError):
-            try:
-                if self.exiting:
-                    return
-                #utils.debug_print("DIR: " + root)
-                
-                numFiles += len(files)
-                numDirs += 1
-                #self.emit(SIGNAL("scanned(int, int)"), numFiles, numDirs)
-
-                # ignore filer snapshot dirs at the CL
-                if '.snapshot' in dirs:
-                    dirs.remove('.snapshot')
+        for dir in scanDirs:
+            for root, dirs, files in os.walk(dir, onerror=self.walkError):
+                try:
+                    if self.exiting:
+                        return
+                    #utils.debug_print("DIR: " + root)
                     
-                #print sum(getsize(join(root, name)) for name in files),
-                totalSize += sum(getsize(join(root, name)) for name in files)
-                #print "bytes in", len(files), "non-directory files"
-                
-                for f in files:
-                    #utils.debug_print("FILE: " + f)
-                    # create a dict for this file
-                    fp = join(root, f)
-                    mime = mimetypes.guess_type(fp, False)
-                    fileDict = {'elementID': id, 'size': getsize(fp), 'isDir': False, 'type': mime, 'path': fp}
-                    self.results.append(fileDict)
-                    id += 1
-
-                for d in dirs:
-                    #utils.debug_print("SUBDIR: " + d)
-                    # create a dict for this subdirectory
-                    dp = join(root, d)
-                    mime = mimetypes.guess_type(dp, False)
-                    dirDict = {'elementID': id, 'size': getsize(join(root, d)), 'isDir': True, 'type': mime, 'path': dp}
-                    self.results.append(dirDict)
-                    id += 1
-                
-            except OSError as e:
-                self.walkError(e)
-            else:
-                pass
+                    numFiles += len(files)
+                    numDirs += 1
+                    #self.emit(SIGNAL("scanned(int, int)"), numFiles, numDirs)
+    
+                    # ignore filer snapshot dirs at the CL
+                    if '.snapshot' in dirs:
+                        dirs.remove('.snapshot')
+                        
+                    #print sum(getsize(join(root, name)) for name in files),
+                    totalSize += sum(getsize(join(root, name)) for name in files)
+                    #print "bytes in", len(files), "non-directory files"
+                    
+                    for f in files:
+                        #utils.debug_print("FILE: " + f)
+                        # create a dict for this file
+                        fp = join(root, f)
+                        mime = mimetypes.guess_type(fp, False)
+                        fileDict = {'elementID': id, 'size': getsize(fp), 'isDir': False, 'type': mime, 'path': fp}
+                        self.results.append(fileDict)
+                        id += 1
+    
+                    for d in dirs:
+                        #utils.debug_print("SUBDIR: " + d)
+                        # create a dict for this subdirectory
+                        dp = join(root, d)
+                        mime = mimetypes.guess_type(dp, False)
+                        dirDict = {'elementID': id, 'size': getsize(join(root, d)), 'isDir': True, 'type': mime, 'path': dp}
+                        self.results.append(dirDict)
+                        id += 1
+                    
+                except OSError as e:
+                    self.walkError(e)
+                else:
+                    pass
         utils.debug_print("walked " + str(numFiles) + " files and " + str(numDirs) + 
                           " directories, totalling " + str(totalSize) + " bytes", utils.SUCC)
 
