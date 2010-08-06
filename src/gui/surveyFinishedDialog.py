@@ -61,6 +61,9 @@ class surveyFinishedDialog(QtGui.QDialog):
         #for i in range(1,5):
         #    print self.results[i]
         
+        # This is broken - just set the progress bar from 0 to 100 once done
+        self.ui.progressBar.setValue(100)
+        
         # done
         QtGui.QMessageBox.information(self, 'Data submitted',
             "The data has been submitted. Thank you for participating!", QtGui.QMessageBox.Ok)
