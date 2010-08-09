@@ -4,9 +4,13 @@
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml"><head><meta content="text/html; charset=UTF-8" http-equiv="Content-Type" /><meta content="text/css" http-equiv="Content-Style-Type" /><title>Computer Laboratory: Personal Storage Survey</title><link href="http://www.cl.cam.ac.uk/style/layout.css" media="all" rel="stylesheet" type="text/css" /><link href="http://www.cl.cam.ac.uk/style/print.css" media="print" rel="stylesheet" type="text/css" /><!--[if IE 6]><link rel="stylesheet" href="http://www.cl.cam.ac.uk/style/ie6.css" type="text/css" media="screen" /><script type="text/javascript" src="http://www.cam.ac.uk/global/js/minmax.js"></script><![endif]--><!--[if IE 7]><link rel="stylesheet" href="http://www.cl.cam.ac.uk/style/ie7.css" type="text/css" media="screen" /><![endif]-->
 
 <link type="text/css" href="css/custom-theme/jquery-ui-1.8.4.custom.css" rel="stylesheet" />	
+<link rel="stylesheet" href="css/validationEngine.jquery.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+<!--<link rel="stylesheet" href="css/template.css" type="text/css" media="screen" title="no title" charset="utf-8" />-->
 
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="jquery-ui.js"></script>
+<script src="jquery.validationEngine-en.js" type="text/javascript"></script>
+<script src="jquery.validationEngine.js" type="text/javascript"></script>
 
 <style>
 .questions {
@@ -80,6 +84,23 @@ input {
 
 <script type="text/javascript">
 jQuery(document).ready(function(){
+
+   $("#questionform").validationEngine()
+
+   //$.validationEngine.loadValidation("#date")
+   //alert($("#formID").validationEngine({returnIsValid:true}))
+   //$.validationEngine.buildPrompt("#date","This is an example","error")	 		 // Exterior prompt build example
+   //$.validationEngine.closePrompt(".formError",true) 							// CLOSE ALL OPEN PROMPTS
+
+
+   function toggleOptional(checkbox, target) {
+      if($(checkbox).attr('checked')) {
+         $(target).show();
+      } else {
+         $(target).hide();
+      }
+   }
+
 	$('.questions .qcatheader').click(function() {
 		$(this).next().toggle('slow');
 		return false;
@@ -87,40 +108,29 @@ jQuery(document).ready(function(){
 
    // checkboxes toggle number boxes
    $('#chk_desktops').click(function() {
-      if($(this).attr('checked')) {
-         $('#num_desktops').show();
-      } else {
-         $('#num_desktops').hide();
-      }
+      toggleOptional(this, '#num_desktops');
    });
    $('#chk_laptops').click(function() {
-      if($(this).attr('checked')) {
-         $('#num_laptops').show();
-      } else {
-         $('#num_laptops').hide();
-      }
+      toggleOptional(this, '#num_laptops');
    });
    $('#chk_smartphone').click(function() {
-      if($(this).attr('checked')) {
-         $('#details_smartphone').show();
-      } else {
-         $('#details_smartphone').hide();
-      }
+      toggleOptional(this, '#details_smartphone');
    });
    $('#chk_mp3player').click(function() {
-      if($(this).attr('checked')) {
-         $('#details_mp3player').show();
-      } else {
-         $('#details_mp3player').hide();
-      }
+      toggleOptional(this, '#details_mp3player');
    });
 
    $('#chk_s_fb').click(function() {
-      if($(this).attr('checked')) {
-         $('#s_fb_opt').show();
-      } else {
-         $('#s_fb_opt').hide();
-      }
+      toggleOptional(this, '#s_fb_opt');
+   });
+   $('#chk_s_google').click(function() {
+      toggleOptional(this, '#s_google_opt');
+   });
+   $('#chk_s_bing').click(function() {
+      toggleOptional(this, '#s_bing_opt');
+   });
+   $('#chk_s_yahoo').click(function() {
+      toggleOptional(this, '#s_yahoo_opt');
    });
 
    // hide them initially
@@ -131,6 +141,9 @@ jQuery(document).ready(function(){
    // hide optional bits by default
    //$('.qoptional').hide();
    $('#s_fb_opt').hide();
+   $('#s_google_opt').hide();
+   $('#s_bing_opt').hide();
+   $('#s_yahoo_opt').hide();
 
    // slider setup
 	$(function() {
@@ -167,14 +180,27 @@ jQuery(document).ready(function(){
             }
 			}
 		});
-      // slider init (?)
+      // slider value init
 		$("#s_fb_trustlbl").val("No indication");
+		$("#s_google_trustlbl").val("No indication");
+		$("#s_bing_trustlbl").val("No indication");
+		$("#s_yahoo_trustlbl").val("No indication");
 	});
 
 });
+
+// form submission
+function submitAndStop() {
+   document.questionform.action = 'survey2a.php';
+}
+
+function submitAndNext() {
+   document.questionform.action = 'survey2b.php';
+}
+
 </script>
 
-<form method="POST" action="">
+<form name="questionform" method="POST" action="">
 <div class="questions">
     <h3 class="qcatheader"><a href="#">Devices you use</a></h3>
     <div class="qcatbody">
@@ -192,7 +218,7 @@ jQuery(document).ready(function(){
             </td>
             <td class="qoptional">
                <div id="num_desktops">
-                  Number: <input type="text" name="txt_numDesktops" size="3" /><br />
+                  Number: <input type="text" name="txt_numDesktops" class="validate[custom[onlyNumber],length[0,3]] text-input" size="3" id="txt_numDesktops" /><br />
                </div>
             </td>
          </tr>
@@ -228,6 +254,13 @@ jQuery(document).ready(function(){
                   <input type="checkbox" name="chk_mp3_ipod" /> iPod  <br />
                   <input type="checkbox" name="chk_mp3_other" /> Other portable music player  <br />
                </div>
+            </td>
+         </tr>
+         <tr>
+            <td>
+               <input type="checkbox" name="chk_smartphone" id="chk_smartphone" /> USB memory stick(s)
+            </td>
+            <td class="qoptional">
             </td>
          </tr>
       </table>
@@ -266,7 +299,7 @@ jQuery(document).ready(function(){
          </tr>
          <tr>
             <td>
-               <input type="checkbox" /> Google
+               <input type="checkbox" id="chk_s_google" /> Google
             </td>
             <td class="qoptional">
                <div id="s_google_opt">
@@ -276,6 +309,7 @@ jQuery(document).ready(function(){
                   <input type="checkbox" id="chk_s_google_maps" /> Google Maps <br />
                   <input type="checkbox" id="chk_s_google_docs" /> Google Docs
                   <input type="checkbox" id="chk_s_google_latitude" /> Google Latitude
+                  <input type="checkbox" id="chk_s_google_latitude" /> YouTube (upload)
                   <hr />
                   <div style="margin-top: 5px;">
                      <label for="s_google_trustsl" style="float: left; margin-right: 20px;">Trust:</label>
@@ -287,16 +321,42 @@ jQuery(document).ready(function(){
          </tr>
          <tr>
             <td>
-               <input type="checkbox" /> Bing
+               <input type="checkbox" id="chk_s_bing" /> Bing/Microsoft
             </td>
             <td class="qoptional">
+               <div id="s_bing_opt">
+                  Services you use: <br />
+                  <input type="checkbox" id="chk_s_bing_search" /> Bing Search
+                  <input type="checkbox" id="chk_s_bing_hotmail" /> Hotmail
+                  <input type="checkbox" id="chk_s_bing_maps" /> Bing Maps <br />
+                  <input type="checkbox" id="chk_s_bing_docs" /> Docs.com
+                  <input type="checkbox" id="chk_s_bing_livemesh" /> Live Mesh
+                  <input type="checkbox" id="chk_s_bing_skydrive" /> SkyDrive
+                  <hr />
+                  <div style="margin-top: 5px;">
+                     <label for="s_bing_trustsl" style="float: left; margin-right: 20px;">Trust:</label>
+                     <div style="width: 200px; float: left;  margin-right: 20px; top: 3px;" class="trustslider" id="s_bing_trustsl"></div>
+                     <input type="text" id="s_bing_trustlbl" style="border:0; color:#f6931f; font-weight:bold; width:120px; float: left;" />
+                  </div>
+               </div>
             </td>
          </tr>
          <tr>
             <td>
-               <input type="checkbox" /> Yahoo
+               <input type="checkbox" id="chk_s_yahoo" /> Yahoo!
             </td>
             <td class="qoptional">
+               <div id="s_yahoo_opt">
+                  Services you use: <br />
+                  <input type="checkbox" id="chk_s_yahoo_search" /> Yahoo! Mail
+                  <input type="checkbox" id="chk_s_yahoo_hotmail" /> Yahoo! Video (upload)
+                  <hr />
+                  <div style="margin-top: 5px;">
+                     <label for="s_yahoo_trustsl" style="float: left; margin-right: 20px;">Trust:</label>
+                     <div style="width: 200px; float: left;  margin-right: 20px; top: 3px;" class="trustslider" id="s_yahoo_trustsl"></div>
+                     <input type="text" id="s_yahoo_trustlbl" style="border:0; color:#f6931f; font-weight:bold; width:120px; float: left;" />
+                  </div>
+               </div>
             </td>
          </tr>
          <tr>
@@ -322,9 +382,9 @@ jQuery(document).ready(function(){
 <p>Thank you very much for completing the survey. In the second part of our study, we ask you to run a small tool that will gather some information on your computers. The tool will not access or transmit any personal information, and you can ask it to only submit aggregate information. However, we are aware that you might not be happy to do this, so you can skip the second stage and still contribute.</p>
 
 <div style="text-align: right;">
-<input type="submit" value="No, I'd rather stop here" style="background-color: darkred; color: white; font-size: 12pt;" />
-
-<input type="submit" value="Yes, proceed to second stage" style="background-color: darkgreen; color: white; font-size: 12pt;" />
+<input type="submit" value="No, I'd rather stop here" style="background-color: darkred; color: white; font-size: 12pt;" onClick="return submitAndStop();" />
+   
+<input type="submit" value="Yes, proceed to second stage" style="background-color: darkgreen; color: white; font-size: 12pt;" onClick="return submitAndNext();" />
 </div>
 
 </form>
