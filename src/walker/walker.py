@@ -6,6 +6,7 @@ Created on 19 Jul 2010
 
 import os, mimetypes
 from os.path import join, getsize
+from hashlib import sha1
 
 from common import utils
 
@@ -73,7 +74,7 @@ class Walker(QThread):
                         # create a dict for this file
                         fp = join(root, f)
                         mime = mimetypes.guess_type(fp, False)
-                        fileDict = {'elementID': id, 'size': getsize(fp), 'isDir': False, 'type': mime, 'path': fp}
+                        fileDict = {'elementID': sha1(fp).hexdigest(), 'size': getsize(fp), 'isDir': False, 'type': mime, 'path': fp}
                         self.results.append(fileDict)
                         id += 1
     
@@ -82,7 +83,7 @@ class Walker(QThread):
                         # create a dict for this subdirectory
                         dp = join(root, d)
                         mime = mimetypes.guess_type(dp, False)
-                        dirDict = {'elementID': id, 'size': getsize(join(root, d)), 'isDir': True, 'type': mime, 'path': dp}
+                        dirDict = {'elementID': sha1(dp).hexdigest(), 'size': getsize(join(root, d)), 'isDir': True, 'type': mime, 'path': dp}
                         self.results.append(dirDict)
                         id += 1
                     
