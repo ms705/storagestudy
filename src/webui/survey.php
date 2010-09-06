@@ -277,12 +277,13 @@ function submitAndNext() {
          </tr>
          <tr>
             <td>
-               <input type="checkbox" id="chk_s_fb" /> Facebook
+               <input type="checkbox" id="chk_s_fb" name="chk_s_fb" /> Facebook
             </td>
             <td class="qoptional">
                <div id="s_fb_opt">
                   Number of pictures/videos: 
-                     <select>
+                     <select name="s_fb_numpics">
+                        <option selected>No indication</option>
                         <option>0 (None)</option>
                         <option>0-10</option>
                         <option>10-100</option>
@@ -292,83 +293,84 @@ function submitAndNext() {
                   <div style="margin-top: 5px;">
                      <label for="s_fb_trustsl" style="float: left; margin-right: 20px;">Trust:</label>
                      <div style="width: 200px; float: left;  margin-right: 20px; top: 3px;" class="trustslider" id="s_fb_trustsl"></div>
-                     <input type="text" id="s_fb_trustlbl" style="border:0; color:#f6931f; font-weight:bold; width:120px; float: left;" />
+                     <input type="text" id="s_fb_trustlbl" name="s_fb_trustlbl" style="border:0; color:#f6931f; font-weight:bold; width:120px; float: left;" />
                   </div>
                </div>
             </td>
          </tr>
          <tr>
             <td>
-               <input type="checkbox" id="chk_s_google" /> Google
+               <input type="checkbox" id="chk_s_google" name="chk_s_google" /> Google
             </td>
             <td class="qoptional">
                <div id="s_google_opt">
                   Services you use: <br />
-                  <input type="checkbox" id="chk_s_google_search" /> Search
-                  <input type="checkbox" id="chk_s_google_gmail" /> Gmail
-                  <input type="checkbox" id="chk_s_google_maps" /> Google Maps <br />
-                  <input type="checkbox" id="chk_s_google_docs" /> Google Docs
-                  <input type="checkbox" id="chk_s_google_latitude" /> Google Latitude
-                  <input type="checkbox" id="chk_s_google_latitude" /> YouTube (upload)
+                  <input type="checkbox" id="chk_s_google_search" name="chk_s_google_search" /> Search
+                  <input type="checkbox" id="chk_s_google_gmail" name="chk_s_google_gmail" /> Gmail
+                  <input type="checkbox" id="chk_s_google_maps" name="chk_s_google_maps" /> Google Maps <br />
+                  <input type="checkbox" id="chk_s_google_docs" name="chk_s_google_docs" /> Google Docs
+                  <input type="checkbox" id="chk_s_google_latitude" name="chk_s_google_latitude" /> Google Latitude
+                  <input type="checkbox" id="chk_s_google_youtube" id="chk_s_google_youtube" /> YouTube (upload)
                   <hr />
                   <div style="margin-top: 5px;">
                      <label for="s_google_trustsl" style="float: left; margin-right: 20px;">Trust:</label>
                      <div style="width: 200px; float: left;  margin-right: 20px; top: 3px;" class="trustslider" id="s_google_trustsl"></div>
-                     <input type="text" id="s_google_trustlbl" style="border:0; color:#f6931f; font-weight:bold; width:120px; float: left;" />
+                     <input type="text" id="s_google_trustlbl" name="s_google_trustlbl" style="border:0; color:#f6931f; font-weight:bold; width:120px; float: left;" />
                   </div>
                </div>
             </td>
          </tr>
          <tr>
             <td>
-               <input type="checkbox" id="chk_s_bing" /> Bing/Microsoft
+               <input type="checkbox" id="chk_s_bing" name="chk_s_bing" /> Bing/Microsoft
             </td>
             <td class="qoptional">
                <div id="s_bing_opt">
                   Services you use: <br />
-                  <input type="checkbox" id="chk_s_bing_search" /> Bing Search
-                  <input type="checkbox" id="chk_s_bing_hotmail" /> Hotmail
-                  <input type="checkbox" id="chk_s_bing_maps" /> Bing Maps <br />
-                  <input type="checkbox" id="chk_s_bing_docs" /> Docs.com
-                  <input type="checkbox" id="chk_s_bing_livemesh" /> Live Mesh
-                  <input type="checkbox" id="chk_s_bing_skydrive" /> SkyDrive
+                  <input type="checkbox" id="chk_s_bing_search" name="chk_s_bing_search" /> Bing Search
+                  <input type="checkbox" id="chk_s_bing_hotmail" name="chk_s_bing_hotmail" /> Hotmail
+                  <input type="checkbox" id="chk_s_bing_maps" name="chk_s_bing_maps" /> Bing Maps <br />
+                  <input type="checkbox" id="chk_s_bing_docs" name="chk_s_bing_docs" /> Docs.com
+                  <input type="checkbox" id="chk_s_bing_livemesh" name="chk_s_bing_livemesh" /> Live Mesh
+                  <input type="checkbox" id="chk_s_bing_skydrive" name="chk_s_bing_skydrive" /> SkyDrive
                   <hr />
                   <div style="margin-top: 5px;">
                      <label for="s_bing_trustsl" style="float: left; margin-right: 20px;">Trust:</label>
                      <div style="width: 200px; float: left;  margin-right: 20px; top: 3px;" class="trustslider" id="s_bing_trustsl"></div>
-                     <input type="text" id="s_bing_trustlbl" style="border:0; color:#f6931f; font-weight:bold; width:120px; float: left;" />
+                     <input type="text" id="s_bing_trustlbl" name="s_bing_trustlbl" style="border:0; color:#f6931f; font-weight:bold; width:120px; float: left;" />
                   </div>
                </div>
             </td>
          </tr>
          <tr>
             <td>
-               <input type="checkbox" id="chk_s_yahoo" /> Yahoo!
+               <input type="checkbox" name="chk_s_yahoo" id="chk_s_yahoo" /> Yahoo!
             </td>
             <td class="qoptional">
                <div id="s_yahoo_opt">
                   Services you use: <br />
-                  <input type="checkbox" id="chk_s_yahoo_search" /> Yahoo! Mail
-                  <input type="checkbox" id="chk_s_yahoo_hotmail" /> Yahoo! Video (upload)
+                  <input type="checkbox" id="chk_s_yahoo_search" name="chk_s_yahoo_search" /> Search
+                  <input type="checkbox" id="chk_s_yahoo_mail" name="chk_s_yahoo_mail" /> Yahoo! Mail
+                  <input type="checkbox" id="chk_s_yahoo_video" name="chk_s_yahoo_video" /> Yahoo! Video (upload)
                   <hr />
                   <div style="margin-top: 5px;">
                      <label for="s_yahoo_trustsl" style="float: left; margin-right: 20px;">Trust:</label>
                      <div style="width: 200px; float: left;  margin-right: 20px; top: 3px;" class="trustslider" id="s_yahoo_trustsl"></div>
-                     <input type="text" id="s_yahoo_trustlbl" style="border:0; color:#f6931f; font-weight:bold; width:120px; float: left;" />
+                     <input type="text" id="s_yahoo_trustlbl" name="s_yahoo_trustlbl" style="border:0; color:#f6931f; font-weight:bold; width:120px; float: left;" />
                   </div>
                </div>
             </td>
          </tr>
          <tr>
             <td>
-               <input type="checkbox" /> Twitter
+               <input type="checkbox" name="chk_s_twitter" /> Twitter
             </td>
             <td class="qoptional">
             </td>
          </tr>
          <tr>
             <td>
-               <input type="checkbox" /> Others
+               <input type="checkbox" name="chk_s_others" /> Others
             </td>
             <td class="qoptional">
             </td>
