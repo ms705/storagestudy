@@ -83,6 +83,7 @@ input {
 require("savedata.inc.php");
 
 $ds = new DataSubmitter();
+$ds->submit($_POST);
 
 ?>
 
@@ -117,6 +118,9 @@ var_dump($_POST);
 <h3>Some (potentially) interesting information...</h3>
 
 
+<h3>Learn more</h3>
+
+<p>If you would like to learn more about the research we are doing, please check out the following pages:</p>
 
 <br />
 

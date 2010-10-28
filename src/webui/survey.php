@@ -38,9 +38,9 @@
    border-top: 1px solid lightgray;
 }
 
-input {
+/*input {
    border: 1px solid black;
-}
+}*/
 
 .qoptional {
    background-color: lightyellow;
@@ -132,6 +132,9 @@ jQuery(document).ready(function(){
    $('#chk_s_yahoo').click(function() {
       toggleOptional(this, '#s_yahoo_opt');
    });
+   $('#chk_s_others').click(function() {
+      toggleOptional(this, '#s_others_opt');
+   });
 
    // hide them initially
    $('#num_desktops').hide();
@@ -144,6 +147,7 @@ jQuery(document).ready(function(){
    $('#s_google_opt').hide();
    $('#s_bing_opt').hide();
    $('#s_yahoo_opt').hide();
+   $('#s_others_opt').hide();
 
    // slider setup
 	$(function() {
@@ -202,6 +206,71 @@ function submitAndNext() {
 
 <form name="questionform" method="POST" action="">
 <div class="questions">
+    <h3 class="qcatheader"><a href="#">About you</a></h3>
+    <div class="qcatbody">
+      <p>Please give us some information about you. All of this is optional, and nothing will be used to identify you in any way.</p>
+      <table>
+         <tr>
+            <th colspan="2" style="width: 50%; background-color: lightyellow; color: orange;">Optional
+            </th>
+         </tr>
+         <tr>
+            <td class="qoptional">
+               Your age: 
+                     <select name="s_p_age">
+                        <option selected value="-1">No indication</option>
+                        <option value="0">under 18</option>
+                        <option value="1">18-25</option>
+                        <option value="2">25-35</option>
+                        <option value="3">35-50</option>
+                        <option value="4">50-65</option>
+                        <option value="5">over 65</option>
+                     </select>
+            </td>
+            <td class="qoptional">
+               Your occupation: 
+                     <select name="s_p_occup">
+                        <option selected value="-1">No indication</option>
+                        <option value="0">Student (school)</option>
+                        <option value="1">Undergraduate Student</option>
+                        <option value="2">Graduate Student</option>
+                        <option value="3">Professional (non-academic)</option>
+                        <option value="4">Academic Researcher</option>
+                        <option value="5">Pensioner</option>
+                        <option value="6">Other</option>
+                     </select>
+            </td>
+         </tr>
+         <tr>
+            <td class="qoptional">
+               Please rate your perceived IT competence
+                     <select name="s_p_itcomp">
+                        <option selected value="-1">No indication</option>
+                        <option value="0">Minimal (&quot;I depend on help from family members to use the computer&quot;)</option>
+                        <option value="1">Low (&quot;I can use Word, Facebook and send emails&quot;)</option>
+                        <option value="2">Average (&quot;I use multiple office programs and buy things online&quot;)</option>
+                        <option value="3">Above average (&quot;I use Wikipedia, Twitter and have a blog&quot;)</option>
+                        <option value="4">High (&quot;I am the family's computer wizz&quot;)</option>
+                        <option value="5">Professional (&quot;I can program and run a network&quot;)</option>
+                        <option value="6">Expert (&quot;I hack kernels for fun&quot;)</option>
+                     </select>
+            </td>
+            <td class="qoptional">
+               How old do you think is the oldest piece of personal digital data that you still have somewhere: 
+                     <select name="s_p_dataageguess">
+                        <option selected value="-1">No indication</option>
+                        <option value="0">over 20 years (before 1990)</option>
+                        <option value="1">15-20 years (1990-1995)</option>
+                        <option value="2">10-15 years (1995-2000)</option>
+                        <option value="3">5-10 years (2000-2005)</option>
+                        <option value="4">3-5 years (2005-2007)</option>
+                        <option value="5">1-3 years (2007-2009)</option>
+                        <option value="6">less than 1 year (after 2009)</option>
+                     </select>
+            </td>
+         </tr>
+      </table>
+    </div>
     <h3 class="qcatheader"><a href="#">Devices you use</a></h3>
     <div class="qcatbody">
       <p>Please indicate what devices holding and processing personal data you regularly use.</p>
@@ -258,7 +327,7 @@ function submitAndNext() {
          </tr>
          <tr>
             <td>
-               <input type="checkbox" name="chk_smartphone" id="chk_smartphone" /> USB memory stick(s)
+               <input type="checkbox" name="chk_usbstick" id="chk_usbstick" /> USB memory stick(s)
             </td>
             <td class="qoptional">
             </td>
@@ -310,7 +379,7 @@ function submitAndNext() {
                   <input type="checkbox" id="chk_s_google_maps" name="chk_s_google_maps" /> Google Maps <br />
                   <input type="checkbox" id="chk_s_google_docs" name="chk_s_google_docs" /> Google Docs
                   <input type="checkbox" id="chk_s_google_latitude" name="chk_s_google_latitude" /> Google Latitude
-                  <input type="checkbox" id="chk_s_google_youtube" id="chk_s_google_youtube" /> YouTube (upload)
+                  <input type="checkbox" id="chk_s_google_youtube" name="chk_s_google_youtube" /> YouTube (upload)
                   <hr />
                   <div style="margin-top: 5px;">
                      <label for="s_google_trustsl" style="float: left; margin-right: 20px;">Trust:</label>
@@ -373,6 +442,10 @@ function submitAndNext() {
                <input type="checkbox" name="chk_s_others" /> Others
             </td>
             <td class="qoptional">
+               <div id="s_others_opt">
+                  Please specify: <br />
+                  <textarea name="s_others_specify" style="width: 300px; height 150px;"></textarea>
+               </div>
             </td>
          </tr>
       </table>

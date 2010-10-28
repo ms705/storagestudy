@@ -46,6 +46,20 @@ input {
    background-color: lightyellow;
 }
 
+.machinetable {
+   border-collapse: collapse;
+}
+
+.machinetable th {
+   border: 1px solid gray;
+   background-color: lightgray;
+}
+
+.machinetable td {
+   border: 1px solid gray;
+   vertical-align: middle;
+}
+
 </style>
 
 </head>
@@ -82,7 +96,13 @@ input {
 
 require("savedata.inc.php");
 
-$ds = new DataSubmitter();
+if (!isset($_GET['token'])) {
+   $ds = new DataSubmitter();
+   $ds->submit($_POST);
+} else {
+   $ds = new DataSubmitter($_GET['token']);
+}
+
 
 ?>
 
@@ -92,6 +112,26 @@ jQuery(document).ready(function(){
 		$(this).next().toggle('fast');
 		return false;
 	}).next().hide();
+
+	$('.os_win').click(function() {
+		$('.osicon' + $(this).attr('num')).attr('src', 'images/icon_windows.gif');
+		return false;
+	});
+	$('.os_mac').click(function() {
+		$('.osicon' + $(this).attr('num')).attr('src', 'images/icon_macos.gif');
+		return false;
+	});
+	$('.os_lin').click(function() {
+		$('.osicon' + $(this).attr('num')).attr('src', 'images/icon_linux.gif');
+		return false;
+	});
+	$('.os_other').click(function() {
+		$('.osicon' + $(this).attr('num')).attr('src', 'images/icon_other.gif');
+		$('#dl-' +  $(this).attr('num')).hide().css("background-color", "gray");
+		$('#submitted' +  $(this).attr('num')).text("Not supported!").css("background-color", "gray");
+		return false;
+	});
+
 });
 </script>
 
@@ -101,6 +141,9 @@ jQuery(document).ready(function(){
 
 <p>Thank you very much for completing the survey. Your data has been submitted to the researchers. If you would like to review the exact data submitted, you can do so below.</p>
 
+<?php 
+if (!isset($_GET['token'])) {
+?>
 <h3 class="qcatheader" style="font-size: 10pt;"><a href="#">Click here to review the exact data submitted from the first stage</a></h3>
 <div class="qcatbody questions">
    <pre>
@@ -111,6 +154,9 @@ var_dump($_POST);
 ?>
    </pre>
 </div>
+<?php
+}
+?>
 
 <br />
 
@@ -122,7 +168,9 @@ $num_desktops = ($_POST['txt_numDesktops'] != '') ? $_POST['txt_numDesktops'] : 
 $num_laptops = ($_POST['txt_numLaptops'] != '') ? $_POST['txt_numLaptops'] : 0;
 $num_computers = $num_desktops + $num_laptops;
 
-if ($num_computers == 0) {
+$usertoken = $ds->get_user_token();
+
+if ($num_computers == 0 && !isset($_GET["token"])) {
 ?>
 <div class="warning">
    <div class="alert">
@@ -133,6 +181,53 @@ if ($num_computers == 0) {
 <?php
 } else {
 
+   $tokens = $ds->getDevTokens();
+?>
+
+<div style="font-size: 16pt; text-align: center; border: 2px solid orange; background-color: lightyellow; padding: 3px;">
+   Your <em>user token</em> is: <b><?php echo strtoupper($usertoken); ?></b> 
+</div>
+
+<p>You will need this token
+to get back to this page in order to download the analysis tool again (for running
+it on another machine, or to run it again later).
+</p>
+
+<table class="machinetable">
+   <tr>
+      <th>Machine ID</th>
+      <th>Type</th>
+      <th>Operating System</th>
+      <th>Token</th>
+      <th></th>
+      <th></th>
+   </tr>
+<?php
+   $i = 1;
+   foreach ($tokens as $t) {
+?>
+   <tr>
+      <td><?php echo $i; ?></td>
+      <td>D</td>
+      <td>
+         <img src="images/icon_windows.gif" class="osicon<?php echo $i;?>" style="float: left;" /> &nbsp;
+         <select style="float: left;">
+            <option class="os_win" num="<?php echo $i;?>">Windows</option>
+            <option class="os_mac" num="<?php echo $i;?>">Mac OS X</option>
+            <option class="os_lin" num="<?php echo $i;?>">Linux</option>
+            <option class="os_other" num="<?php echo $i;?>">Other</option>
+         </select>
+      </td>
+      <td><strong><?php echo strtoupper($t); ?></strong></td>
+      <td><a href="" id="dl-<?php echo $i;?>">Download...</a></td>
+      <td id="submitted<?php echo $i;?>">Data submitted!</td>
+   </tr>
+<?php      
+      $i++;
+   }
+?>
+</table>
+<?php
 }
 ?>
 
