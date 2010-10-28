@@ -26,7 +26,7 @@ class ResultSubmitter(QtCore.QObject):
         '''
         #self.res = resultsDict
     
-    def submit(self, tempfile):
+    def submit(self, tempfile, token):
         
         # submit the results over the network
         
@@ -39,7 +39,7 @@ class ResultSubmitter(QtCore.QObject):
         
         # headers contains the necessary Content-Type and Content-Length
         # datagen is a generator object that yields the encoded parameters
-        file_param = MultipartParam.from_file("submission1", tempfile)
+        file_param = MultipartParam.from_file(token, tempfile)
         datagen, headers = multipart_encode([file_param])
 
 

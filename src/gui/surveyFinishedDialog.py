@@ -18,7 +18,7 @@ from results import submit
 
 class surveyFinishedDialog(QtGui.QDialog):
     
-    def __init__(self, owner, results):        
+    def __init__(self, owner, results, token):        
         QtGui.QMainWindow.__init__(self)
         self.ui = ui_finished.Ui_finishedDialog()
         self.ui.setupUi(self)
@@ -26,6 +26,7 @@ class surveyFinishedDialog(QtGui.QDialog):
         
         self.done = False
         self.submitter = submit.ResultSubmitter()
+        self.token = token;
         
 
         # generate a temporary file and store the results there
@@ -56,7 +57,7 @@ class surveyFinishedDialog(QtGui.QDialog):
         self.ui.progressBar.setMinimum(0)
         self.ui.progressBar.setMaximum(100)
         # actually submit the data
-        self.submitter.submit(self.tmpfile)
+        self.submitter.submit(self.tmpfile, self.token)
         
         #for i in range(1,5):
         #    print self.results[i]

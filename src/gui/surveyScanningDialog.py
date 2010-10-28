@@ -17,12 +17,13 @@ from gui.surveyFinishedDialog import surveyFinishedDialog
 
 class surveyScanningDialog(QtGui.QDialog):
     
-    def __init__(self, owner, dirs):        
+    def __init__(self, owner, dirs, token):        
         QtGui.QMainWindow.__init__(self)
         self.ui = ui_scanning.Ui_scanDialog()
         self.ui.setupUi(self)
         self.app = owner
         self.done = False
+        self.token = token;
         
         # set up worker thread
         self.scanThread = walker.Walker()
@@ -79,7 +80,7 @@ class surveyScanningDialog(QtGui.QDialog):
         # show results screen
         self.done = True
         self.close()
-        d = surveyFinishedDialog(self.app, self.scanThread.results)
+        d = surveyFinishedDialog(self.app, self.scanThread.results, self.token)
         d.setAttribute(Qt.WA_DeleteOnClose)
         d.exec_()
 

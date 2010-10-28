@@ -39,15 +39,16 @@ class surveyFolderSelectionDialog(QtGui.QDialog):
         utils.debug_print("Folders selected:", utils.SUCC, False)
         print dirs
         self.close()
-        d = surveyScanningDialog(self.app, dirs)
+        d = surveyScanningDialog(self.app, dirs, self.token)
         d.setAttribute(Qt.WA_DeleteOnClose)
         d.exec_()
 
-    def __init__(self, owner):        
+    def __init__(self, owner, token):        
         QtGui.QMainWindow.__init__(self)
         self.ui = ui_folderselection.Ui_surveyDialog()
         self.ui.setupUi(self)
         self.app = owner;
+        self.token = token;
 
         # signal/slot connections
         self.connect(self.ui.btnCancel, SIGNAL('clicked()'), self.cancel)

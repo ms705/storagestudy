@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="res" >
+    <file>tokenexample.png</file>
     <file>uc-colour-small.png</file>
   </qresource>
 </RCC>
