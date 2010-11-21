@@ -48,6 +48,8 @@ input {
 
 .machinetable {
    border-collapse: collapse;
+   position: relative;
+   margin: auto;
 }
 
 .machinetable th {
@@ -103,7 +105,6 @@ if (!isset($_GET['token'])) {
    $ds = new DataSubmitter($_GET['token']);
 }
 
-
 ?>
 
 <script type="text/javascript">
@@ -115,35 +116,88 @@ jQuery(document).ready(function(){
 
 	$('.os_win').click(function() {
 		$('.osicon' + $(this).attr('num')).attr('src', 'images/icon_windows.gif');
+		$('#dl-' +  $(this).attr('num')).show().css("background-color", "white");
+		$('#status' +  $(this).attr('num')).text("").css("background-color", "white");
 		return false;
 	});
 	$('.os_mac').click(function() {
 		$('.osicon' + $(this).attr('num')).attr('src', 'images/icon_macos.gif');
+		$('#dl-' +  $(this).attr('num')).show().css("background-color", "white");
+		$('#status' +  $(this).attr('num')).text("").css("background-color", "white");
 		return false;
 	});
 	$('.os_lin').click(function() {
 		$('.osicon' + $(this).attr('num')).attr('src', 'images/icon_linux.gif');
+		$('#dl-' +  $(this).attr('num')).show().css("background-color", "white");
+		$('#status' +  $(this).attr('num')).text("").css("background-color", "white");
 		return false;
 	});
 	$('.os_other').click(function() {
 		$('.osicon' + $(this).attr('num')).attr('src', 'images/icon_other.gif');
 		$('#dl-' +  $(this).attr('num')).hide().css("background-color", "gray");
-		$('#submitted' +  $(this).attr('num')).text("Not supported!").css("background-color", "gray");
+		$('#status' +  $(this).attr('num')).text("Not supported!").css("background-color", "gray");
+		return false;
+	});
+
+	$('#emaillink').click(function() {
+		$(this).next().toggle('fast');
+		return false;
+	}).next().hide();
+
+   // a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
+   //$( "#dialog:ui-dialog" ).dialog( "destroy" );
+
+   $( "#downloadDialog" ).dialog({
+      autoOpen: false,
+	   height: 250,
+      width: 450,
+	   modal: true,
+      show: "fold",
+      hide: "explode"
+   });
+	$( "#opener" ).click(function() {
+		$( "#downloadDialog" ).dialog( "open" );
 		return false;
 	});
 
 });
+
+function sendTokenEmail() {
+   var address = $('input[name="useremail"]').attr("value");
+   var usertoken = $('#usertoken').text();
+   //alert("ad: " + address + ", token: " + usertoken);
+   $.get('sendmail.php?a=sendmail&token=' + usertoken + '&email=' + address, function(data) {
+      alert('Sent an email to ' + address + '.');
+   });
+
+   
+}
+
+function saveMachineLabel(token, label) {
+   //alert('util.php?token=' + token + '&label=' + label);
+   $.get('util.php?a=savelabel&token=' + token + '&label=' + label, function(data){
+      //alert("Data Loaded: " + data);
+   });
+}
+
+function saveMachineOS(token, osid) {
+   //alert('util.php?token=' + token + '&label=' + label);
+   $.get('util.php?a=saveos&token=' + token + '&os=' + osid, function(data){
+      //alert("Data Loaded: " + data);
+   });
+}
+
 </script>
 
 <h1>Personal Storage Study</h1>
 
 <h3>Thanks for agreeing to continue!</h3>
 
-<p>Thank you very much for completing the survey. Your data has been submitted to the researchers. If you would like to review the exact data submitted, you can do so below.</p>
-
 <?php 
 if (!isset($_GET['token'])) {
 ?>
+<p>Thank you very much for completing the survey. Your data has been submitted to the researchers. If you would like to review the exact data submitted, you can do so below.</p>
+
 <h3 class="qcatheader" style="font-size: 10pt;"><a href="#">Click here to review the exact data submitted from the first stage</a></h3>
 <div class="qcatbody questions">
    <pre>
@@ -154,6 +208,12 @@ var_dump($_POST);
 ?>
    </pre>
 </div>
+<?php
+} else {
+?>
+
+<p>Thank you very much for completing the survey. The first part of your data has been submitted to the researchers.</p>
+
 <?php
 }
 ?>
@@ -181,34 +241,45 @@ if ($num_computers == 0 && !isset($_GET["token"])) {
 <?php
 } else {
 
-   $tokens = $ds->getDevTokens();
+   $machines = $ds->getMachineDescriptors();
+
 ?>
 
-<div style="font-size: 16pt; text-align: center; border: 2px solid orange; background-color: lightyellow; padding: 3px;">
-   Your <em>user token</em> is: <b><?php echo strtoupper($usertoken); ?></b> 
+<p>
+<div style="text-align: center; border: 2px solid orange; background-color: lightyellow; padding: 3px;">
+   <div style="font-size: 16pt; margin-top: 8px;">Your <em>user token</em> is: <b><span id="usertoken"><?php echo strtoupper($usertoken); ?></span></b></div>
+   <p>You will need this token to get back to this page in order to download the analysis tool again (for running
+      it on another machine, or to run it again later).
+   </p>
+   <p id="emaillink"><a href="">Click here if you would like a link to this page to be emailed to you</a>. [N.B.: We will not store your email address]</p>
+   <p>Your email address: <input type="text" name="useremail" /> <input type="submit" value="Send" onClick="sendTokenEmail();" /></p>
 </div>
-
-<p>You will need this token
-to get back to this page in order to download the analysis tool again (for running
-it on another machine, or to run it again later).
 </p>
 
+<br />
+
+<p>Please download the survey tool on each of your machines and run it, entering
+the machine token. This will scan your machine and provide us with some 
+anonymised data about how you utilise personal storage (click <b>&raquo;</b> <a href="">here</a> to see 
+exactly what data is going to be gathered).</p>
+
+<div style="text-align: center;">
 <table class="machinetable">
    <tr>
       <th>Machine ID</th>
       <th>Type</th>
       <th>Operating System</th>
-      <th>Token</th>
+      <th>Machine Token</th>
       <th></th>
-      <th></th>
+      <th style="width: 100px;">Status</th>
    </tr>
 <?php
    $i = 1;
-   foreach ($tokens as $t) {
+   foreach ($machines as $m) {
 ?>
    <tr>
-      <td><?php echo $i; ?></td>
-      <td>D</td>
+      <td><?php echo $i; ?>: <input type="text" name="m<?php echo $i; ?>name" size="8" onBlur="saveMachineLabel('<?php echo $m['token']; ?>', this.value);" value="<?php echo $m['label']; ?>" /></td>
+      <td><?php echo ($m['type'] == 0) ? "D" : "L"; ?></td>
       <td>
          <img src="images/icon_windows.gif" class="osicon<?php echo $i;?>" style="float: left;" /> &nbsp;
          <select style="float: left;">
@@ -218,18 +289,25 @@ it on another machine, or to run it again later).
             <option class="os_other" num="<?php echo $i;?>">Other</option>
          </select>
       </td>
-      <td><strong><?php echo strtoupper($t); ?></strong></td>
+      <td><strong><?php echo strtoupper($m['token']); ?></strong></td>
       <td><a href="" id="dl-<?php echo $i;?>">Download...</a></td>
-      <td id="submitted<?php echo $i;?>">Data submitted!</td>
+      <td id="status<?php echo $i;?>"></td>
    </tr>
 <?php      
       $i++;
    }
 ?>
 </table>
+</div>
 <?php
 }
 ?>
+
+<a href="" id="opener">foo</a>
+
+<div id="downloadDialog" title="Download dialog">
+	<p>Adding the modal overlay screen makes the dialog look more prominent because it dims out the page content.</p>
+</div>
 
 <br />
 

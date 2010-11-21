@@ -1,19 +1,7 @@
 <?php
 
+include "DB.class.php";
 
-class DB extends PDO
-{
-   public function __construct($file = 'db_settings.ini') {
-      if (!$settings = parse_ini_file($file, TRUE)) throw new Exception('Unable to open ' . $file . '.');
-
-      $dsn = $settings['database']['driver'] . 
-               ':host=' . $settings['database']['host'] .
-               ((!empty($settings['database']['port'])) ? (';port=' . $settings['database']['port']) : '') .
-               ';dbname=' . $settings['database']['dbname'];
-      
-      parent::__construct($dsn, $settings['database']['username'], $settings['database']['password']);
-   }
-}
 
 class DataSubmitter {
 
@@ -39,7 +27,7 @@ class DataSubmitter {
       if (isset($token)) {
          $this->userToken = $token;
 
-         $this->devTokens = $this->get_device_records($token);
+         $this->machineDescriptors = $this->get_device_records($token);
       }
    }
 
@@ -54,15 +42,15 @@ class DataSubmitter {
 
       $this->userToken = $uid;
 
-      $this->devTokens = $this->create_device_records($dataArray, $uid);
+      $this->machineDescriptors = $this->create_device_records($dataArray, $uid);
 
       $this->save_survey_responses($dataArray);
      
    }
 
 
-   function getDevTokens() {
-      return $this->devTokens;
+   function getMachineDescriptors() {
+      return $this->machineDescriptors;
    } 
 
 
@@ -151,18 +139,22 @@ class DataSubmitter {
 
    function get_device_records($uid) {
 
-      $q = $this->db->prepare( "SELECT token FROM study_devices " .
+      $q = $this->db->prepare( "SELECT token, dev_type, label FROM study_devices " .
                   "WHERE uid = ?;");
 
       $res = $q->execute(array($uid));
 
       $rows = $q->fetchAll();
 
+      $i = 0;
       foreach ($rows as $r) {
-         $devTokens[] = $r['token'];
+         $devs[$i]['token'] = $r['token'];
+         $devs[$i]['type'] = $r['dev_type'];
+         $devs[$i]['label'] = $r['label'];
+         $i++;
       }
 
-      return $devTokens;
+      return $devs;
 
    }
 

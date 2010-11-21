@@ -12,7 +12,7 @@ echo "Received submission\n";
 $uploaddir = './data/';
 
 foreach ($_FILES as $k => $f) {
-	$uploadfile = $uploaddir . basename($f['name']).'.gz';
+	$uploadfile = $uploaddir . basename($f['name']).'-'.$k.'-'.time().'.gz';
 	
 	if (move_uploaded_file($f['tmp_name'], $uploadfile)) {
 	    echo "File is valid, and was successfully uploaded.\n";
