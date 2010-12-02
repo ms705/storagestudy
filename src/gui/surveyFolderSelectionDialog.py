@@ -3,7 +3,7 @@ Created on 23 Jul 2010
 
 @author: ms705
 '''
-import os
+import os, sys
 
 from gui.surveyScanningDialog import surveyScanningDialog
 from gui.checkableDirModel import CheckableFSModel
@@ -13,6 +13,12 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import *
 
 from common import utils
+
+# Windows distributable versions of Python don't have a quit()
+# primitive, so we need to define it in every file!
+def quit():
+    sys.exit(0)
+    pass
 
 class surveyFolderSelectionDialog(QtGui.QDialog):
     

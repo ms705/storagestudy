@@ -3,7 +3,7 @@ Created on 23 Jul 2010
 
 @author: ms705
 '''
-
+import sys
 import json, gzip
 import tempfile
 
@@ -14,6 +14,12 @@ from PyQt4.QtCore import *
 
 from common import utils
 from results import submit
+
+# Windows distributable versions of Python don't have a quit()
+# primitive, so we need to define it in every file!
+def quit():
+    sys.exit(0)
+    pass
 
 
 class surveyFinishedDialog(QtGui.QDialog):

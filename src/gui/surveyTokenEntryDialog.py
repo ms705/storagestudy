@@ -3,12 +3,20 @@ Created on 23 Jul 2010
 
 @author: ms705
 '''
+import sys
+
 from gui.surveyFolderSelectionDialog import surveyFolderSelectionDialog
 
 import ui_tokenentry
 from PyQt4 import QtGui, QtCore
 
 from common import utils
+
+# Windows distributable versions of Python don't have a quit()
+# primitive, so we need to define it in every file!
+def quit():
+    sys.exit(0)
+    pass
 
 class surveyTokenEntryDialog(QtGui.QDialog):
     

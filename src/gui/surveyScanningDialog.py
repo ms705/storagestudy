@@ -15,6 +15,12 @@ from walker import walker
 
 from gui.surveyFinishedDialog import surveyFinishedDialog
 
+# Windows distributable versions of Python don't have a quit()
+# primitive, so we need to define it in every file!
+def quit():
+    sys.exit(0)
+    pass
+
 class surveyScanningDialog(QtGui.QDialog):
     
     def __init__(self, owner, dirs, token):        
