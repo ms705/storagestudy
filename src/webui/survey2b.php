@@ -62,6 +62,22 @@ input {
    vertical-align: middle;
 }
 
+#download-button {
+   width: 300px;
+   height: 50px;
+   font-weight: bold;
+   font-size: 16pt;
+   margin: auto;
+   position: relative;
+}
+
+#download-table {
+   border-collapse: collapse;
+}
+#download-table td, #download-table th {
+   border: 1px dotted black;
+}
+
 </style>
 
 </head>
@@ -115,27 +131,19 @@ jQuery(document).ready(function(){
 	}).next().hide();
 
 	$('.os_win').click(function() {
-		$('.osicon' + $(this).attr('num')).attr('src', 'images/icon_windows.gif');
-		$('#dl-' +  $(this).attr('num')).show().css("background-color", "white");
-		$('#status' +  $(this).attr('num')).text("").css("background-color", "white");
+      setDisplayOS($(this).attr('num'), 0);
 		return false;
 	});
 	$('.os_mac').click(function() {
-		$('.osicon' + $(this).attr('num')).attr('src', 'images/icon_macos.gif');
-		$('#dl-' +  $(this).attr('num')).show().css("background-color", "white");
-		$('#status' +  $(this).attr('num')).text("").css("background-color", "white");
+      setDisplayOS($(this).attr('num'), 1);
 		return false;
 	});
 	$('.os_lin').click(function() {
-		$('.osicon' + $(this).attr('num')).attr('src', 'images/icon_linux.gif');
-		$('#dl-' +  $(this).attr('num')).show().css("background-color", "white");
-		$('#status' +  $(this).attr('num')).text("").css("background-color", "white");
+      setDisplayOS($(this).attr('num'), 2);
 		return false;
 	});
 	$('.os_other').click(function() {
-		$('.osicon' + $(this).attr('num')).attr('src', 'images/icon_other.gif');
-		$('#dl-' +  $(this).attr('num')).hide().css("background-color", "gray");
-		$('#status' +  $(this).attr('num')).text("Not supported!").css("background-color", "gray");
+      setDisplayOS($(this).attr('num'), 3);
 		return false;
 	});
 
@@ -144,33 +152,129 @@ jQuery(document).ready(function(){
 		return false;
 	}).next().hide();
 
-   // a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
-   //$( "#dialog:ui-dialog" ).dialog( "destroy" );
-
-   $( "#downloadDialog" ).dialog({
+   $("#downloadDialog").dialog({
       autoOpen: false,
-	   height: 250,
+	   height: 340,
       width: 450,
 	   modal: true,
       show: "fold",
       hide: "explode"
    });
-	$( "#opener" ).click(function() {
-		$( "#downloadDialog" ).dialog( "open" );
-		return false;
-	});
+
+<?php
+   $machines = $ds->getMachineDescriptors();
+   $i = 1;
+   foreach ($machines as $m) {
+?>
+   setDisplayOS(<?php echo $i; ?>, <?php echo $m['os']; ?>);
+<?php
+      $i++;
+   }
+?>
 
 });
+
+function setDisplayOS(devid, osid) {
+   $("#osselect" + devid).val(osid);
+   
+   switch (osid) {
+      case 0:  // Windows
+		   $('.osicon' + devid).attr('src', 'images/icon_windows.gif');
+		   $('#dl-' +  devid).show().css("background-color", "white");
+		   $('#status' +  devid).text("").css("background-color", "white");
+      break;
+
+      case 1:  // Mac OS
+		   $('.osicon' + devid).attr('src', 'images/icon_macos.gif');
+		   $('#dl-' +  devid).show().css("background-color", "white");
+		   $('#status' +  devid).text("").css("background-color", "white");
+      break;
+
+      case 2:  // Linux
+		   $('.osicon' + devid).attr('src', 'images/icon_linux.gif');
+		   $('#dl-' +  devid).show().css("background-color", "white");
+		   $('#status' +  devid).text("").css("background-color", "white");
+      break;
+
+      case 3:  // Other
+	      $('.osicon' + devid).attr('src', 'images/icon_other.gif');
+	      $('#dl-' +  devid).hide().css("background-color", "gray");
+	      $('#status' +  devid).text("Not supported!").css("background-color", "gray");
+      break;
+
+      default:
+   }
+}
+
+function openDLDialog(id, token) {
+   $.get('download.php?token=' + token + '&id=' + id, function(data) {
+      $("#dl-contents").html(data);
+   });   
+	$("#downloadDialog").dialog("open");
+	return false;
+}
+
+function downloadSelectionOptions(id, token) {
+   $.get('download.php?token=' + token + '&id=' + id + '&sel=1', function(data) {
+      $("#dl-contents").html(data);
+   });   
+	//$("#downloadDialog").dialog("open");
+	return false;
+}
+
+function initiateDownload(osid, bits) {
+   $("#download-button").attr('disabled', 'disabled');
+   var clientfile="";
+   switch (osid) {
+      case 0:  // Windows
+         clientfile = "scanclient-win" + bits + ".exe";
+      break;
+
+      case 1:  // Mac OS
+         clientfile = "scanclient-mac32.dmg";
+      break;
+
+      case 2:  // Linux
+         clientfile = "scanclient-lin" + bits + ".tar.gz";
+      break;
+
+      case 3:  // Other
+         alert("Unrecognised operating system. Please use the manual download facility, or email malte.schwarzkopf@cl.cam.ac.uk to receive help.");
+         downloadSelectionOptions(osid, '');
+      break;
+
+      default:
+   }
+
+   window.location.href = 'clients/' + clientfile;
+   waitForResults();
+
+	return false;
+}
+
+function waitForResults() {
+
+   // timer
+
+   $.get('util.php?a=wait', function(data) {
+         $("#dl-contents").html(data);
+      });
+
+}
 
 function sendTokenEmail() {
    var address = $('input[name="useremail"]').attr("value");
    var usertoken = $('#usertoken').text();
-   //alert("ad: " + address + ", token: " + usertoken);
-   $.get('sendmail.php?a=sendmail&token=' + usertoken + '&email=' + address, function(data) {
-      alert('Sent an email to ' + address + '.');
-   });
 
-   
+   if (address == "") {
+      alert('No email address entered!');
+      return;
+   }
+
+   //alert("ad: " + address + ", token: " + usertoken);
+   $.get('util.php?a=sendmail&token=' + usertoken + '&email=' + address, function(data) {
+      alert('Sent an email to ' + address + '.');
+   });   
 }
 
 function saveMachineLabel(token, label) {
@@ -181,7 +285,7 @@ function saveMachineLabel(token, label) {
 }
 
 function saveMachineOS(token, osid) {
-   //alert('util.php?token=' + token + '&label=' + label);
+   //alert('util.php?token=' + token + '&os=' + osid);
    $.get('util.php?a=saveos&token=' + token + '&os=' + osid, function(data){
       //alert("Data Loaded: " + data);
    });
@@ -267,7 +371,7 @@ exactly what data is going to be gathered).</p>
 <table class="machinetable">
    <tr>
       <th>Machine ID</th>
-      <th>Type</th>
+      <th style="width: 70px;">Type</th>
       <th>Operating System</th>
       <th>Machine Token</th>
       <th></th>
@@ -279,18 +383,18 @@ exactly what data is going to be gathered).</p>
 ?>
    <tr>
       <td><?php echo $i; ?>: <input type="text" name="m<?php echo $i; ?>name" size="8" onBlur="saveMachineLabel('<?php echo $m['token']; ?>', this.value);" value="<?php echo $m['label']; ?>" /></td>
-      <td><?php echo ($m['type'] == 0) ? "D" : "L"; ?></td>
+      <td><img src="images/<?php echo ($m['type'] == 0) ? 'desktop' : 'laptop'; ?>.png" align="middle" style="float: left;" /> <?php echo ($m['type'] == 0) ? 'Desktop' : 'Laptop'; ?></td>
       <td>
          <img src="images/icon_windows.gif" class="osicon<?php echo $i;?>" style="float: left;" /> &nbsp;
-         <select style="float: left;">
-            <option class="os_win" num="<?php echo $i;?>">Windows</option>
-            <option class="os_mac" num="<?php echo $i;?>">Mac OS X</option>
-            <option class="os_lin" num="<?php echo $i;?>">Linux</option>
-            <option class="os_other" num="<?php echo $i;?>">Other</option>
+         <select id="osselect<?php echo $i;?>" onBlur="saveMachineOS('<?php echo $m['token']; ?>', this.selectedIndex);" style="float: left;">
+            <option class="os_win" value="0" num="<?php echo $i;?>">Windows</option>
+            <option class="os_mac" value="1" num="<?php echo $i;?>">Mac OS X</option>
+            <option class="os_lin" value="2" num="<?php echo $i;?>">Linux</option>
+            <option class="os_other" value="3" num="<?php echo $i;?>">Other</option>
          </select>
       </td>
       <td><strong><?php echo strtoupper($m['token']); ?></strong></td>
-      <td><a href="" id="dl-<?php echo $i;?>">Download...</a></td>
+      <td><a href="" onClick="openDLDialog(<?php echo $i.',\''.$m['token'].'\''; ?>); return false;" id="dl-<?php echo $i;?>">Download...</a></td>
       <td id="status<?php echo $i;?>"></td>
    </tr>
 <?php      
@@ -303,10 +407,8 @@ exactly what data is going to be gathered).</p>
 }
 ?>
 
-<a href="" id="opener">foo</a>
-
-<div id="downloadDialog" title="Download dialog">
-	<p>Adding the modal overlay screen makes the dialog look more prominent because it dims out the page content.</p>
+<div id="downloadDialog" title="Download scanning client">
+   <div id="dl-contents">Loading...</div>
 </div>
 
 <br />

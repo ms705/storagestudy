@@ -139,7 +139,7 @@ class DataSubmitter {
 
    function get_device_records($uid) {
 
-      $q = $this->db->prepare( "SELECT token, dev_type, label FROM study_devices " .
+      $q = $this->db->prepare( "SELECT token, dev_type, dev_os, label FROM study_devices " .
                   "WHERE uid = ?;");
 
       $res = $q->execute(array($uid));
@@ -151,6 +151,7 @@ class DataSubmitter {
          $devs[$i]['token'] = $r['token'];
          $devs[$i]['type'] = $r['dev_type'];
          $devs[$i]['label'] = $r['label'];
+         $devs[$i]['os'] = $r['dev_os'];
          $i++;
       }
 
