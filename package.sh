@@ -1,5 +1,6 @@
 #!/bin/bash
 
+PLATFORM=`uname`
 
 if [[ $PLATFORM == 'Darwin' ]]; then
   echo "Building Mac OS X App using py2app..."

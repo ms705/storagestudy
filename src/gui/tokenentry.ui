@@ -272,9 +272,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QProgressBar" name="progressBar">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>320</y>
-     <width>471</width>
+     <width>461</width>
      <height>23</height>
     </rect>
    </property>

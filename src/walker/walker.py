@@ -74,7 +74,8 @@ class Walker(QThread):
                         # create a dict for this file
                         fp = join(root, f)
                         mime = mimetypes.guess_type(fp, False)
-                        fileDict = {'elementID': sha1(fp).hexdigest(), 'size': getsize(fp), 'isDir': False, 'type': mime, 'namehash': sha1(f).hexdigest()}
+                        statinfo = os.stat(fp)
+                        fileDict = {'elementID': sha1(fp).hexdigest(), 'size': getsize(fp), 'isDir': False, 'type': mime, 'namehash': sha1(f).hexdigest(), 'statinfo': statinfo, 'parent': sha1(fp).hexdigest() }
                         self.results.append(fileDict)
                         id += 1
     
@@ -83,7 +84,8 @@ class Walker(QThread):
                         # create a dict for this subdirectory
                         dp = join(root, d)
                         mime = mimetypes.guess_type(dp, False)
-                        dirDict = {'elementID': sha1(dp).hexdigest(), 'size': getsize(join(root, d)), 'isDir': True, 'type': mime, 'namehash': sha1(d).hexdigest()}
+                        statinfo = os.stat(dp)
+                        dirDict = {'elementID': sha1(dp).hexdigest(), 'size': getsize(join(root, d)), 'isDir': True, 'type': mime, 'namehash': sha1(d).hexdigest(), 'statinfo': statinfo, 'parent': sha1(fp).hexdigest() }
                         self.results.append(dirDict)
                         id += 1
                     
