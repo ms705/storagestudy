@@ -38,12 +38,40 @@
    border-top: 1px solid lightgray;
 }
 
-/*input {
-   border: 1px solid black;
-}*/
-
 .qoptional {
    background-color: lightyellow;
+}
+
+.machinetable {
+   border-collapse: collapse;
+   position: relative;
+   margin: auto;
+}
+
+.machinetable th {
+   border: 1px solid gray;
+   background-color: lightgray;
+}
+
+.machinetable td {
+   border: 1px solid gray;
+   vertical-align: middle;
+}
+
+#download-button {
+   width: 300px;
+   height: 50px;
+   font-weight: bold;
+   font-size: 16pt;
+   margin: auto;
+   position: relative;
+}
+
+#download-table {
+   border-collapse: collapse;
+}
+#download-table td, #download-table th {
+   border: 1px dotted black;
 }
 
 </style>
@@ -80,55 +108,21 @@
 
 <?php
 
-require("savedata.inc.php");
-
-$ds = new DataSubmitter();
-$ds->submit($_POST);
-
-$usertoken = $ds->get_user_token();
-
 ?>
 
-<script type="text/javascript">
-jQuery(document).ready(function(){
-	$('.qcatheader').click(function() {
-		$(this).next().toggle('fast');
-		return false;
-	}).next().hide();
-});
-</script>
-
 <div style="float: right; font-size: 22pt;">
-<span style="color: lightgray; font-size: 18pt;">Page</span> <span style="color: lightgray;">2</span><span style="color: lightgray;">/3</span>
+<span style="color: lightgray; font-size: 18pt;">Page</span> <span style="color: lightgray;">3</span><span style="color: lightgray;">/3</span>
 </div>
 
 <h1>Personal Storage Study</h1>
 
-<h3>Thanks for participating!</h3>
+<h3>Thanks for staying with us so far!</h3>
 
-<p>Thank you very much for completing the survey. Your data has been submitted to the researchers. If you would like to review the exact data submitted, you can do so below. <!--We have also summarized some interesting information about how your service use and habits relate to those of other participants in this study to date.--></p>
-
-<h3 class="qcatheader" style="font-size: 10pt;"><a href="#">Click here to review the exact data submitted</a></h3>
-<div class="qcatbody questions">
-   <pre>
-<?php
-
-var_dump($_POST);
-
-?>
-   </pre>
-</div>
+<p>Thank you very much for completing the survey and submitting data from your machines. This is the final stage &ndash; we will ask you for any other comments and give you an opportunity to give us a way of contacting you if we either conduct a follow-up study or publish results based on the data you provided.</p>
 
 <br />
 
-<!--<h3>Some (potentially) interesting information...</h3>
-
-
-<h3>Learn more</h3>
-
-<p>If you would like to learn more about the research we are doing, please check out the following pages:</p>-->
-
-<h3>Final questions</h3>
+<h3>Stage 3 &ndash; Final questions</h3>
 
 <form method="POST" action="surveyend.php">
 <p>
@@ -157,12 +151,14 @@ var_dump($_POST);
 <p>Thank you again for supporting our research by providing your data! We appreciate the time and effort you have committed to this.</p>
 
 <div style="text-align: right;">
-<input type="hidden" name="usertoken" value="<?php echo $usertoken; ?>" />
+<input type="hidden" name="usertoken" value="<?php echo $_POST['usertoken']; ?>" />
 <input type="submit" value="Finish!" style="background-color: darkgreen; color: white; font-size: 12pt;" />
 </div>
 </form>
 
+
 <br />
+
 
 <!-- ########################### /CONTENT ################################## -->
 

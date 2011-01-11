@@ -2,17 +2,19 @@
 
 include "DB.class.php";
 
+$token = $_GET['token'];
+
 switch ($_GET['a']) {
 
    case "sendmail":
 
-      $address = $_GET['email'];
-      $token = $_GET['token'];
+      if (isset($_GET['email']) && $_GET['email'] != '') $address = $_GET['email'];
+      else return;
 
       $emailtext = <<<END
 Thank you for participating in the Personal Storage Study ran by Malte Schwarzkopf and Dr Steven Hand at the University of Cambridge Computer Laboratory. You have requested your access token to be emailed to this address ($address). Note that we have *not* permanently recorded your email address anywhere, it is not linked to your data, and that there is no log of emails sent accessible to us.
 
-Your access token is:  $token .
+Your user token is:  $token .
 
 You can access the second stage of the study at any time by clicking on the following link:
 
@@ -52,7 +54,7 @@ END;
 
       $db = new DB();
 
-      if (isset($_GET['token'])) {
+      if (isset($token)) {
          $q = $db->prepare("UPDATE study_devices " .
                            "SET dev_os = ? " . 
                            "WHERE token = ?;");
@@ -62,10 +64,48 @@ END;
 
    break;
 
+   case "check":
+
+      // Code to test if data has been submitted
+      $uploaddir = './data';
+
+      $uploadfileexpr = '/^[a-zA-Z0-9\.]+\-'.strtoupper($token).'\-([0-9]+)\.gz$/';
+      $files = scandir($uploaddir);
+
+      foreach ($files as $f) {
+         if (preg_match($uploadfileexpr, $f, $matches)) {
+            echo $matches[1];
+            return;
+         }
+      }
+
+      echo 0;
+
+   break;
+
    case "wait":
+?>
+            <div style="text-align: center;"><img style="margin: auto; position: relative;" src="images/hourglass.gif" />
+            <p>Waiting for results to be uploaded...</p></div>
 
-      echo "Please wait for results...";
+            <p style="text-align: center; font-size: 8pt;">Please run the scan client that you downloaded and follow the instructions
+            on screen. If the download failed, close this dialog and try again.</p>
 
+            <p style="border: 1px solid orange; background-color: lightyellow; text-align: center;">This machine's token is: <br />
+            <span style="font-weight: bold; font-size: 18pt; padding: 3px;"><?php echo strtoupper($token); ?></span><br />
+            Please enter this token into the tool when asked for it.</p>
+
+<?php
+   break;
+
+   case "waitdone":
+?>
+            <div style="text-align: center;"><img style="margin: auto; position: relative;" src="images/check.png" />
+            <p>Results received. Thank you!</p></div>
+
+            <p style="text-align: center; font-size: 8pt;">
+            <a href="" onClick="closeDLDialog('<?php echo strtoupper($token); ?>'); return false;">Close the dialog.</a></p>
+<?php
    break;
 
    default:

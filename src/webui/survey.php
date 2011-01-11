@@ -78,6 +78,10 @@
 
 <!-- ########################### CONTENT ################################### -->
 
+<div style="float: right; font-size: 22pt;">
+<span style="color: lightgray; font-size: 18pt;">Page</span> <span style="color: lightgray;">1</span><span style="color: lightgray;">/3</span>
+</div>
+
 <h1>Personal Storage Study</h1>
 
 <h3>Thanks for participating!</h3>
@@ -119,6 +123,9 @@ jQuery(document).ready(function(){
    $('#chk_mp3player').click(function() {
       toggleOptional(this, '#details_mp3player');
    });
+   $('#chk_usbstick').click(function() {
+      toggleOptional(this, '#num_usbsticks');
+   });
 
    $('#chk_s_fb').click(function() {
       toggleOptional(this, '#s_fb_opt');
@@ -132,6 +139,12 @@ jQuery(document).ready(function(){
    $('#chk_s_yahoo').click(function() {
       toggleOptional(this, '#s_yahoo_opt');
    });
+   $('#chk_s_twitter').click(function() {
+      toggleOptional(this, '#s_twitter_opt');
+   });
+   $('#chk_s_dropbox').click(function() {
+      toggleOptional(this, '#s_dropbox_opt');
+   });
    $('#chk_s_others').click(function() {
       toggleOptional(this, '#s_others_opt');
    });
@@ -139,6 +152,7 @@ jQuery(document).ready(function(){
    // hide them initially
    $('#num_desktops').hide();
    $('#num_laptops').hide();
+   $('#num_usbsticks').hide();
    $('#details_smartphone').hide();
    $('#details_mp3player').hide();
    // hide optional bits by default
@@ -147,6 +161,8 @@ jQuery(document).ready(function(){
    $('#s_google_opt').hide();
    $('#s_bing_opt').hide();
    $('#s_yahoo_opt').hide();
+   $('#s_twitter_opt').hide();
+   $('#s_dropbox_opt').hide();
    $('#s_others_opt').hide();
 
    // slider setup
@@ -189,6 +205,8 @@ jQuery(document).ready(function(){
 		$("#s_google_trustlbl").val("No indication");
 		$("#s_bing_trustlbl").val("No indication");
 		$("#s_yahoo_trustlbl").val("No indication");
+		$("#s_twitter_trustlbl").val("No indication");
+		$("#s_dropbox_trustlbl").val("No indication");
 	});
 
 });
@@ -249,7 +267,7 @@ function submitAndNext() {
                         <option value="0">Minimal (&quot;I depend on help from family members to use the computer&quot;)</option>
                         <option value="1">Low (&quot;I can use Word, Facebook and send emails&quot;)</option>
                         <option value="2">Average (&quot;I use multiple office programs and buy things online&quot;)</option>
-                        <option value="3">Above average (&quot;I use Wikipedia, Twitter and have a blog&quot;)</option>
+                        <option value="3">Above average (&quot;I create web content, use Twitter or have a blog&quot;)</option>
                         <option value="4">High (&quot;I am the family's computer wizz&quot;)</option>
                         <option value="5">Professional (&quot;I can program and run a network&quot;)</option>
                         <option value="6">Expert (&quot;I hack kernels for fun&quot;)</option>
@@ -259,13 +277,13 @@ function submitAndNext() {
                How old do you think is the oldest piece of personal digital data that you still have somewhere: 
                      <select name="s_p_dataageguess">
                         <option selected value="-1">No indication</option>
-                        <option value="0">over 20 years (before 1990)</option>
-                        <option value="1">15-20 years (1990-1995)</option>
-                        <option value="2">10-15 years (1995-2000)</option>
-                        <option value="3">5-10 years (2000-2005)</option>
-                        <option value="4">3-5 years (2005-2007)</option>
-                        <option value="5">1-3 years (2007-2009)</option>
-                        <option value="6">less than 1 year (after 2009)</option>
+                        <option value="0">over 20 years (before 1991)</option>
+                        <option value="1">15-20 years (1992-1996)</option>
+                        <option value="2">10-14 years (1997-2001)</option>
+                        <option value="3">5-9 years (2002-2006)</option>
+                        <option value="4">3-4 years (2007-2008)</option>
+                        <option value="5">1-2 years (2009-2010)</option>
+                        <option value="6">less than 1 year</option>
                      </select>
             </td>
          </tr>
@@ -330,6 +348,9 @@ function submitAndNext() {
                <input type="checkbox" name="chk_usbstick" id="chk_usbstick" /> USB memory stick(s)
             </td>
             <td class="qoptional">
+               <div id="num_usbsticks">
+                  Number: <input type="text" name="txt_numUSBSticks" size="3" /><br />
+               </div>
             </td>
          </tr>
       </table>
@@ -352,12 +373,12 @@ function submitAndNext() {
                <div id="s_fb_opt">
                   Number of pictures/videos: 
                      <select name="s_fb_numpics">
-                        <option selected>No indication</option>
-                        <option>0 (None)</option>
-                        <option>0-10</option>
-                        <option>10-100</option>
-                        <option>100-500</option>
-                        <option>More than 500</option>
+                        <option value="-1" selected>No indication</option>
+                        <option value="0">0 (None)</option>
+                        <option value="10">1-10</option>
+                        <option value="100">11-100</option>
+                        <option value="500">101-500</option>
+                        <option value="99999">More than 500</option>
                      </select>
                   <div style="margin-top: 5px;">
                      <label for="s_fb_trustsl" style="float: left; margin-right: 20px;">Trust:</label>
@@ -432,14 +453,47 @@ function submitAndNext() {
          </tr>
          <tr>
             <td>
-               <input type="checkbox" name="chk_s_twitter" /> Twitter
+               <input type="checkbox" name="chk_s_twitter" id="chk_s_twitter" /> Twitter
             </td>
             <td class="qoptional">
+               <div id="s_twitter_opt">
+                  <input type="checkbox" id="chk_s_twitter_reading" name="chk_s_twitter_reading" /> Reading
+                  <input type="checkbox" id="chk_s_twitter_tweeting" name="chk_s_twitter_tweeting" /> Tweeting
+                  (frequency: 
+                     <select name="s_twitter_freq">
+                        <option value="-1" selected>No indication</option>
+                        <option value="0">Less than once per month</option>
+                        <option value="1">A few times per month</option>
+                        <option value="2">A few times per week</option>
+                        <option value="3">Once per day</option>
+                        <option value="4">More than once a day</option>
+                     </select>)
+                  <hr />
+                  <div style="margin-top: 5px;">
+                     <label for="s_twitter_trustsl" style="float: left; margin-right: 20px;">Trust:</label>
+                     <div style="width: 200px; float: left;  margin-right: 20px; top: 3px;" class="trustslider" id="s_twitter_trustsl"></div>
+                     <input type="text" id="s_twitter_trustlbl" name="s_twitter_trustlbl" style="border:0; color:#f6931f; font-weight:bold; width:120px; float: left;" />
+                  </div>
+               </div>
             </td>
          </tr>
          <tr>
             <td>
-               <input type="checkbox" name="chk_s_others" /> Others
+               <input type="checkbox" name="chk_s_dropbox" id="chk_s_dropbox" /> Dropbox
+            </td>
+            <td class="qoptional">
+               <div id="s_dropbox_opt">
+                  <div style="margin-top: 5px;">
+                     <label for="s_dropbox_trustsl" style="float: left; margin-right: 20px;">Trust:</label>
+                     <div style="width: 200px; float: left;  margin-right: 20px; top: 3px;" class="trustslider" id="s_dropbox_trustsl"></div>
+                     <input type="text" id="s_dropbox_trustlbl" name="s_dropbox_trustlbl" style="border:0; color:#f6931f; font-weight:bold; width:120px; float: left;" />
+                  </div>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td>
+               <input type="checkbox" name="chk_s_others" id="chk_s_others" /> Others
             </td>
             <td class="qoptional">
                <div id="s_others_opt">
@@ -454,7 +508,7 @@ function submitAndNext() {
 
 <br />
 
-<p>Thank you very much for completing the survey. In the second part of our study, we ask you to run a small tool that will gather some information on your computers. The tool will not access or transmit any personal information, and you can ask it to only submit aggregate information. However, we are aware that you might not be happy to do this, so you can skip the second stage and still contribute.</p>
+<p>Thank you very much for completing the survey. In the second part of our study, we ask you to run a small tool that will gather some information on your computers. The tool will not access or transmit any personal information.<!--, and you can ask it to only submit aggregate information.--> However, we are aware that you might not be happy to do this, so you can skip the second stage and still contribute.</p>
 
 <div style="text-align: right;">
 <input type="submit" value="No, I'd rather stop here" style="background-color: darkred; color: white; font-size: 12pt;" onClick="return submitAndStop();" />

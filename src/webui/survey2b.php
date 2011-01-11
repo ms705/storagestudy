@@ -38,10 +38,6 @@
    border-top: 1px solid lightgray;
 }
 
-input {
-   border: 1px solid black;
-}
-
 .qoptional {
    background-color: lightyellow;
 }
@@ -119,6 +115,9 @@ if (!isset($_GET['token'])) {
    $ds->submit($_POST);
 } else {
    $ds = new DataSubmitter($_GET['token']);
+   if ($_GET['a'] == 'update') {
+      $ds->submitDevices($_POST);
+   }
 }
 
 ?>
@@ -174,6 +173,30 @@ jQuery(document).ready(function(){
 
 });
 
+var check;
+function checkDataUploaded(token, handler, handlerUsesTokens) {
+
+   function test(data) {
+      check = parseInt(data);
+      if (handlerUsesTokens) {
+         handler(token, (check > 0));
+      } else {
+         handler(tokenToDevID(token), (check > 0));
+      }
+   }
+
+   $.get('util.php?a=check&token=' + token, test);
+
+}
+
+function setUploadStatus(devid, uploaded) {
+   if (uploaded) {
+      $('#status' +  devid).css("background-color", "lightgreen").text("Data uploaded!");
+   } else {
+      $('#status' +  devid).css("background-color", "white").text("");
+   }
+}
+
 function setDisplayOS(devid, osid) {
    $("#osselect" + devid).val(osid);
    
@@ -181,19 +204,22 @@ function setDisplayOS(devid, osid) {
       case 0:  // Windows
 		   $('.osicon' + devid).attr('src', 'images/icon_windows.gif');
 		   $('#dl-' +  devid).show().css("background-color", "white");
-		   $('#status' +  devid).text("").css("background-color", "white");
+		   $('#status' +  devid).css("background-color", "white");
+         checkDataUploaded(devIDToToken(devid), setUploadStatus, false);
       break;
 
       case 1:  // Mac OS
 		   $('.osicon' + devid).attr('src', 'images/icon_macos.gif');
 		   $('#dl-' +  devid).show().css("background-color", "white");
-		   $('#status' +  devid).text("").css("background-color", "white");
+		   $('#status' +  devid).css("background-color", "white");
+         checkDataUploaded(devIDToToken(devid), setUploadStatus, false);
       break;
 
       case 2:  // Linux
 		   $('.osicon' + devid).attr('src', 'images/icon_linux.gif');
 		   $('#dl-' +  devid).show().css("background-color", "white");
-		   $('#status' +  devid).text("").css("background-color", "white");
+		   $('#status' +  devid).css("background-color", "white");
+         checkDataUploaded(devIDToToken(devid), setUploadStatus, false);
       break;
 
       case 3:  // Other
@@ -203,6 +229,8 @@ function setDisplayOS(devid, osid) {
       break;
 
       default:
+         checkDataUploaded('<?php echo strtoupper($m['token']); ?>', setUploadStatus, false);
+
    }
 }
 
@@ -222,7 +250,7 @@ function downloadSelectionOptions(id, token) {
 	return false;
 }
 
-function initiateDownload(osid, bits) {
+function initiateDownload(osid, bits, token) {
    $("#download-button").attr('disabled', 'disabled');
    var clientfile="";
    switch (osid) {
@@ -247,20 +275,44 @@ function initiateDownload(osid, bits) {
    }
 
    window.location.href = 'clients/' + clientfile;
-   waitForResults();
+   waitForResults(token);
 
 	return false;
 }
 
-function waitForResults() {
+function waitForResults(token) {
 
    // timer
+   var intID = setInterval(checkForResult, 5000);
 
-   $.get('util.php?a=wait', function(data) {
-         $("#dl-contents").html(data);
-      });
+   function checkForResult() {
+
+      checkDataUploaded(token, function(token, status) {
+         if (status) {
+            // show completion message in dialog
+            $.get('util.php?a=waitdone&token=' + token, function(data) {
+                  $("#dl-contents").html(data);
+               });
+            clearInterval(intID);
+         } else {
+            $.get('util.php?a=wait&token=' + token, function(data) {
+                  $("#dl-contents").html(data);
+               });
+         }
+      }, true);
+
+   }
 
 }
+
+function closeDLDialog(token) {
+   // close the dialog
+   $("#downloadDialog").dialog("close");
+
+   // update the row in the main page table
+   $('#status' +  tokenToDevID(token)).text("Data uploaded").css("background-color", "lightgreen");
+}
+
 
 function sendTokenEmail() {
    var address = $('input[name="useremail"]').attr("value");
@@ -291,7 +343,39 @@ function saveMachineOS(token, osid) {
    });
 }
 
+function tokenToDevID(token) {
+<?php
+   $i = 1;
+   foreach ($machines as $m) {
+?>
+   if (token == '<?php echo strtoupper($m['token']); ?>') {
+      return <?php echo $i; ?>;
+   }
+<?php
+   $i++;
+   }
+?>
+}
+
+function devIDToToken(devid) {
+<?php
+   $i = 1;
+   foreach ($machines as $m) {
+?>
+   if (devid == <?php echo $i; ?>) {
+      return '<?php echo strtoupper($m['token']); ?>';
+   }
+<?php
+   $i++;
+   }
+?>
+}
+
 </script>
+
+<div style="float: right; font-size: 22pt;">
+<span style="color: lightgray; font-size: 18pt;">Page</span> <span style="color: lightgray;">2</span><span style="color: lightgray;">/3</span>
+</div>
 
 <h1>Personal Storage Study</h1>
 
@@ -339,9 +423,20 @@ if ($num_computers == 0 && !isset($_GET["token"])) {
 <div class="warning">
    <div class="alert">
       You did not specify the number of desktop and laptop computers you use on the previous page. 
-      Please add your devices manually in the table below.
+      However, to continue, we need an indication about how many computers you are going to run the
+      analysis tool on. Please supply this information below.
    </div>
+   <form method="POST" action="survey2b.php?token=<?php echo $usertoken; ?>&a=update">
+      <div style="text-align: center;">
+         Desktops: <input type="text" name="txt_numDesktops" size="2" /> 
+         Laptops: <input type="text" name="txt_numLaptops" size="2" />
+         <input type="submit" value="Update" />
+      </div>
+      <br />
+   </form>
 </div>
+
+
 <?php
 } else {
 
@@ -403,15 +498,26 @@ exactly what data is going to be gathered).</p>
 ?>
 </table>
 </div>
-<?php
-}
-?>
 
 <div id="downloadDialog" title="Download scanning client">
    <div id="dl-contents">Loading...</div>
 </div>
 
 <br />
+
+<p>Thank you very much for completing the second stage. Once you have uploaded the data for your machines above, you can finalize your participation in the study. On the next page, we will ask for any final comments and give you an opportunity to voluntarily provide us with contact details for a second run in the future.</p>
+
+<form method="POST" action="survey3.php">
+<div style="text-align: right;">
+<input type="hidden" name="usertoken" value="<?php echo $usertoken; ?>" />
+<input type="submit" value="Proceed to final stage" style="background-color: darkgreen; color: white; font-size: 12pt;" />
+</div>
+</form>
+
+<?php
+}
+?>
+
 
 <!-- ########################### /CONTENT ################################## -->
 

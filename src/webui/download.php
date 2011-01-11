@@ -25,7 +25,9 @@ if (preg_match("/i686|368/i", $ua) > 0) {
    $bits = 64;
    $sig .= "(64-bit)";
 } else {
-   $bits = -1;
+   //$bits = -1;
+   // default assumption: 32 bit, and hope for compatibility mode
+   $bits = 32;
 } 
 
 ?>
@@ -37,7 +39,7 @@ if (!isset($_GET['sel'])) {
 
 <p>Please use the button below to download the appropriate scanning tool.</p>
 
-<p style="text-align: center;"><input type="submit" id="download-button" onClick="initiateDownload(<?php echo $os; ?>, <?php echo $bits; ?>);" value="Download" /></p>
+<p style="text-align: center;"><input type="submit" id="download-button" onClick="initiateDownload(<?php echo $os; ?>, <?php echo $bits; ?>, '<?php echo $token; ?>');" value="Download" /></p>
 <?php
 } else {
 ?>
@@ -50,18 +52,18 @@ if (!isset($_GET['sel'])) {
    </tr>
    <tr>
       <td><img src="images/icon_windows.gif" style="float: left;" /> Windows</td>
-      <td><a href="clients/scanclient-win32.exe" onClick="initiateDownload(0, 32); return false;">Download</a></td>
-      <td><a href="clients/scanclient-win64.exe" onClick="initiateDownload(0, 64); return false;">Download</a></td>
+      <td><a href="clients/scanclient-win32.exe" onClick="initiateDownload(0, 32, '<?php echo $token; ?>'); return false;">Download</a></td>
+      <td><a href="clients/scanclient-win32.exe" onClick="initiateDownload(0, 32, '<?php echo $token; ?>'); return false;">Download</a></td>
    </tr>
    <tr>
       <td><img src="images/icon_macos.gif" style="float: left;" /> Mac OS X</td>
-      <td><a href="clients/scanclient-mac32.dmg" onClick="initiateDownload(1, 32); return false;">Download</a></td>
-      <td>&ndash;</td>
+      <td><a href="clients/scanclient-mac32.dmg" onClick="initiateDownload(1, 32, '<?php echo $token; ?>'); return false;">Download</a></td>
+      <td><a href="clients/scanclient-mac32.dmg" onClick="initiateDownload(1, 32, '<?php echo $token; ?>'); return false;">Download</a></td>
    </tr>
    <tr>
       <td><img src="images/icon_linux.gif" style="float: left;" /> Linux</td>
-      <td><a href="clients/scanclient-lin32.tar.gz" onClick="initiateDownload(2, 32); return false;">Download</a></td>
-      <td><a href="clients/scanclient-lin64.tar.gz" onClick="initiateDownload(2, 64); return false;">Download</a></td>
+      <td><a href="clients/scanclient-lin32.tar.gz" onClick="initiateDownload(2, 32, '<?php echo $token; ?>'); return false;">Download</a></td>
+      <td><a href="clients/scanclient-lin64.tar.gz" onClick="initiateDownload(2, 64, '<?php echo $token; ?>'); return false;">Download</a></td>
    </tr>
 </table>
 <?php

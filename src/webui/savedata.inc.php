@@ -42,10 +42,21 @@ class DataSubmitter {
 
       $this->userToken = $uid;
 
-      $this->machineDescriptors = $this->create_device_records($dataArray, $uid);
+      $this->devTokens = $this->create_device_records($dataArray, $uid, false);
+
+      $this->machineDescriptors = $this->get_device_records($uid);
 
       $this->save_survey_responses($dataArray);
      
+   }
+
+
+   function submitDevices($dataArray) {
+
+      $this->devTokens = $this->create_device_records($dataArray, $this->userToken, true);
+
+      $this->machineDescriptors = $this->get_device_records($this->userToken);
+
    }
 
 
@@ -88,7 +99,7 @@ class DataSubmitter {
    }
 
 
-   function create_device_records($dataArray, $uid) {
+   function create_device_records($dataArray, $uid, $repost) {
 
       $hasDesktops = ($_POST['chk_desktops'] == "on");
       $hasLaptops = ($_POST['chk_laptops'] == "on");
@@ -96,7 +107,7 @@ class DataSubmitter {
       $numLaptops = $_POST['txt_numLaptops'];
       //$numServers = $_POST['txt_numServers'];
 
-      if (!($hasDesktops || $hasLaptops)) 
+      if (!$repost && !($hasDesktops || $hasLaptops)) 
          return false;
 
       if ($numDesktops < 0 && $numLaptops < 0) 
@@ -164,6 +175,71 @@ class DataSubmitter {
 
       //var_dump($_POST);
 
+      $qstring =  "INSERT INTO study_responses " .
+                  "SET ";
+      
+      $i = 0;
+      foreach ($_POST as $k => $v) {
+         if (strpos($k, 's_p_') !== FALSE) continue;
+         if ($i > 0) $qstring .= ", ";
+         if (strpos($k, ';') !== FALSE || strpos($v, ';') !== FALSE) continue;
+         $qstring .= $k.' = '.$this->convertValue($v);
+         $i++;
+      }
+      $qstring .= ';';
+
+      //echo $qstring;
+
+      $q = $this->db->prepare($qstring);
+
+      $res = $q->execute();
+
+   }
+
+
+   function convertValue($val) {
+
+      switch ($val) {
+         case "off":
+         case "None at all":
+            return 0;
+         case "Very little":
+         case "on":
+            return 1;
+         case "Little":
+            return 2;
+         case "No indication":
+            return 3;
+         case "Some":
+            return 4;
+         case "Reasonably much":
+            return 5;
+         case "Very much":
+            return 6;
+         default:
+            //echo $val."<br />";
+            if(is_numeric($val)) return $val;
+            else return -1;
+      }
+
+   }
+
+   
+   function check_data_uploaded($token) {
+
+      // Code to test if data has been submitted
+      $uploaddir = './data';
+
+      $uploadfileexpr = '/^[a-zA-Z0-9\.]+\-'.strtoupper($token).'\-([0-9]+)\.gz$/';
+      $files = scandir($uploaddir);
+
+      foreach ($files as $f) {
+         if (preg_match($uploadfileexpr, $f, $matches)) {
+            return $matches[1];
+         }
+      }
+
+      return 0;
    }
 
 }

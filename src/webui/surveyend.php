@@ -38,12 +38,40 @@
    border-top: 1px solid lightgray;
 }
 
-/*input {
-   border: 1px solid black;
-}*/
-
 .qoptional {
    background-color: lightyellow;
+}
+
+.machinetable {
+   border-collapse: collapse;
+   position: relative;
+   margin: auto;
+}
+
+.machinetable th {
+   border: 1px solid gray;
+   background-color: lightgray;
+}
+
+.machinetable td {
+   border: 1px solid gray;
+   vertical-align: middle;
+}
+
+#download-button {
+   width: 300px;
+   height: 50px;
+   font-weight: bold;
+   font-size: 16pt;
+   margin: auto;
+   position: relative;
+}
+
+#download-table {
+   border-collapse: collapse;
+}
+#download-table td, #download-table th {
+   border: 1px dotted black;
 }
 
 </style>
@@ -80,89 +108,44 @@
 
 <?php
 
-require("savedata.inc.php");
+include("DB.class.php");
 
-$ds = new DataSubmitter();
-$ds->submit($_POST);
+// Save the comment and email address data (if any)
+$db = new DB();
 
-$usertoken = $ds->get_user_token();
+if ($_POST['comments'] != '' && $_POST['comments'] != 'Your comments here...') {
+   $q = $db->prepare("UPDATE study_users " .
+                     "SET comments = ? " . 
+                     "WHERE identifier = ?;");
+
+   $res = $q->execute(array($_POST['comments'], $_POST['usertoken']));
+}
+
+if ($_POST['email'] != '') {
+   $q = $db->prepare("INSERT INTO study_emails " .
+                     "SET email = ?, notify = ?;");
+
+   $notify = ($_POST['notify_about_papers'] == 'on') ? 1 : 0;
+
+   $res = $q->execute(array($_POST['email'], $notify));
+}
 
 ?>
 
-<script type="text/javascript">
-jQuery(document).ready(function(){
-	$('.qcatheader').click(function() {
-		$(this).next().toggle('fast');
-		return false;
-	}).next().hide();
-});
-</script>
-
 <div style="float: right; font-size: 22pt;">
-<span style="color: lightgray; font-size: 18pt;">Page</span> <span style="color: lightgray;">2</span><span style="color: lightgray;">/3</span>
+<span style="color: lightgray; font-size: 18pt;">Finished</span>
 </div>
 
 <h1>Personal Storage Study</h1>
 
 <h3>Thanks for participating!</h3>
 
-<p>Thank you very much for completing the survey. Your data has been submitted to the researchers. If you would like to review the exact data submitted, you can do so below. <!--We have also summarized some interesting information about how your service use and habits relate to those of other participants in this study to date.--></p>
-
-<h3 class="qcatheader" style="font-size: 10pt;"><a href="#">Click here to review the exact data submitted</a></h3>
-<div class="qcatbody questions">
-   <pre>
-<?php
-
-var_dump($_POST);
-
-?>
-   </pre>
+<div style="text-align: center;">
+<p><img style="margin: auto; position: relative;" class="inline" src="images/check.png" /></p> <p style="font-size: 14pt;">All data submitted. Thank you very much!</p>
 </div>
 
 <br />
 
-<!--<h3>Some (potentially) interesting information...</h3>
-
-
-<h3>Learn more</h3>
-
-<p>If you would like to learn more about the research we are doing, please check out the following pages:</p>-->
-
-<h3>Final questions</h3>
-
-<form method="POST" action="surveyend.php">
-<p>
-<div style="border: 2px solid orange; background-color: lightyellow; padding: 3px;">
-   <p style="width: 50%; background-color: lightyellow; color: orange; font-weight: bold;">Optional:</p>
-   <p>Please provide any final comments that you feel have not been covered by the study until now. This can include anything about your personal storage habits that you deem relevant for research on this topic.</p>
-   <textarea name="comments" style="width: 90%; height: 100px;" onClick="if (this.value == 'Your comments here...') { this.value = ''; }">Your comments here...</textarea>
-</div>
-</p>
-
-<br />
-
-<p>Finally, we are asking you to provide us with an email address. <strong>This will not be associated with the data set created by your participation in the study.</strong> We are asking for it because we may at a later point ask you to participate in a follow-up study that looks at how your personal storage has evolved over time. Of course, participation will be voluntary, and we will not use your email address for any other purposes. It will be stored seperately from the data sets and only used in isolation.</p>
-
-<p>
-<div style="border: 2px solid orange; background-color: lightyellow; padding: 3px;">
-   <p style="width: 50%; background-color: lightyellow; color: orange; font-weight: bold;">Optional:</p>
-   <p>If you consent, please enter your email address here: 
-   <input type="text" name="email" style="width: 200px;" /></p>
-   <p>Tick this box if you would like to hear about scientific results based on the data you provided being published: <input type="checkbox" name="notify_about_papers" />
-</div>
-</p>
-
-<br />
-
-<p>Thank you again for supporting our research by providing your data! We appreciate the time and effort you have committed to this.</p>
-
-<div style="text-align: right;">
-<input type="hidden" name="usertoken" value="<?php echo $usertoken; ?>" />
-<input type="submit" value="Finish!" style="background-color: darkgreen; color: white; font-size: 12pt;" />
-</div>
-</form>
-
-<br />
 
 <!-- ########################### /CONTENT ################################## -->
 
