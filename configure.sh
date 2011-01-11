@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Configure script. Does not work on Windows!
+
 PLATFORM=`uname`
 
 if [[ $PLATFORM == 'Darwin' ]]; then 

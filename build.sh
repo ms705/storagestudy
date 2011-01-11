@@ -1,4 +1,7 @@
 #!/bin/bash 
+#
+# N.B: THIS IS BROKEN. DO NOT RUN IT!
+
 # build eggs used by the tool
 
 PLATFORM=`uname`
